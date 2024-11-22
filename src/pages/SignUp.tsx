@@ -2,14 +2,14 @@ import { Button, Input } from "@nextui-org/react";
 import { FC, FormEventHandler, useState } from "react";
 import client from "../api/client";
 import { RiMailCheckLine } from "react-icons/ri";
+import { parseError } from "../utlis/helper";
 
-const emailRegex = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$");
+const emailRegex = new RegExp("^[a-zA-Z0-9._%+-]+@gmail.com$");
 
 const SignUp: FC = () => {
 
     const [email, setEmail] = useState('');
     const [invalidForm, setInvalidForm] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const [showSuccessResponse, setShowSuccessResponse] = useState(false);
 
@@ -27,8 +27,8 @@ const SignUp: FC = () => {
             });
             setShowSuccessResponse(true);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            setErrorMessage(error.response.data.err.email[0]);
+        } catch (error) {
+            parseError(error)
         } finally {
             setLoading(false);
         }
@@ -69,9 +69,6 @@ const SignUp: FC = () => {
                     </Button>
                 </form>
 
-                <div>
-                    {errorMessage && <p className="text-red-500 text-sm mt-2">Something wrong with your mail. Check again!</p>}
-                </div>
             </ div>
         </div >
     )

@@ -1,6 +1,7 @@
 import { Avatar, Button, Input } from "@nextui-org/react";
 import { ChangeEventHandler, FC, FormEventHandler, useState } from "react";
 import client from "../api/client";
+import { parseError } from "../utlis/helper";
 
 type newUserInfo = {
     name: string;
@@ -50,7 +51,7 @@ const NewUser: FC = () => {
             const { data } = await client.put('/auth/profile', formData);
             console.log(data);
         } catch (error) {
-            console.log(error);
+            parseError(error);
         } finally {
             setLoading(false);
         }
