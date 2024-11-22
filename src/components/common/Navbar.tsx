@@ -1,9 +1,9 @@
 import {
-  Navbar as NextUINav,
+  Badge,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Badge,
+  Navbar as NextUINav,
 } from "@nextui-org/react";
 import { FC } from "react";
 import { FaBookReader } from "react-icons/fa";
@@ -14,6 +14,7 @@ import ProfileOptions from "../profile/ProfileOptions";
 
 
 const Navbar: FC = () => {
+
   return (
     <NextUINav>
       <NavbarBrand>
@@ -24,6 +25,7 @@ const Navbar: FC = () => {
       </NavbarBrand>
 
       <NavbarContent justify="end">
+        {/* cart item */}
         <NavbarItem>
           <Link to="/cart">
             <Badge content="0" color="danger" shape="circle">
@@ -31,6 +33,7 @@ const Navbar: FC = () => {
             </Badge>
           </Link>
         </NavbarItem>
+        {/* profile item  */}
         <NavbarItem>
           <ProfileOptions />
         </NavbarItem>

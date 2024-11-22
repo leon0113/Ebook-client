@@ -1,15 +1,19 @@
 import {
     Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
     DropdownItem,
-    User,
+    DropdownMenu,
     DropdownSection,
+    DropdownTrigger,
+    User,
 } from "@nextui-org/react";
 import { FC } from "react";
 import { Link } from "react-router-dom";
+import { Profile } from "../../store/slice/auth.slice";
 
-
+interface Props {
+    profile: Profile;
+    signOut(): void;
+}
 
 interface LinkProps {
     title: string;
@@ -24,12 +28,8 @@ const DropdownLink: FC<LinkProps> = ({ title, to }) => {
     );
 };
 
-const ProfileMenu: FC = () => {
-    const name = "John Doe";
-    const email = "john@email.com";
-    const role = "author";
-    const avatar = "";
-    const signOut = () => { };
+const ProfileMenu: FC<Props> = ({ profile, signOut }) => {
+    const { email, name, role, avatar } = profile
 
     return (
         <div className="flex items-center gap-4">

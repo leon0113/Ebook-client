@@ -51,8 +51,10 @@ const NewUser: FC = () => {
             console.log(data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
+
     }
 
     return (
