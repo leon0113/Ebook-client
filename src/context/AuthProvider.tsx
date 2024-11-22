@@ -2,6 +2,7 @@ import { createContext, FC, ReactNode, useEffect } from "react";
 import { AuthState, getAuthState, updateProfile, updateStatus } from "../store/slice/auth.slice";
 import client from "../api/client";
 import { useDispatch, useSelector } from "react-redux";
+import { parseError } from "../utils/helper";
 
 interface Props {
     children: ReactNode;
@@ -32,7 +33,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
             dispatch(updateStatus('unauthenticated'));
             dispatch(updateProfile(null));
         } catch (error) {
-            console.log(error);
+            parseError(error);
             dispatch(updateStatus('unauthenticated'));
         }
     }
@@ -48,7 +49,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
                 dispatch(updateProfile(null));
                 dispatch(updateStatus('unauthenticated'));
             })
-    }, [])
+    }, [dispatch])
 
     return <AuthContext.Provider value={{ profile, status, signOut }}>
         {children}

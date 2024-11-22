@@ -1,8 +1,8 @@
 import { Button, Input } from "@nextui-org/react";
 import { FC, FormEventHandler, useState } from "react";
-import client from "../api/client";
 import { RiMailCheckLine } from "react-icons/ri";
-import { parseError } from "../utlis/helper";
+import client from "../api/client";
+import { parseError } from "../utils/helper";
 
 const emailRegex = new RegExp("^[a-zA-Z0-9._%+-]+@gmail.com$");
 
@@ -12,6 +12,7 @@ const SignUp: FC = () => {
     const [invalidForm, setInvalidForm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showSuccessResponse, setShowSuccessResponse] = useState(false);
+
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
@@ -26,7 +27,6 @@ const SignUp: FC = () => {
                 email
             });
             setShowSuccessResponse(true);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
             parseError(error)
         } finally {

@@ -4,6 +4,7 @@ import { FC } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { updateProfile } from "../store/slice/auth.slice";
+import Loading from "../components/common/Loading";
 
 const Verify: FC = () => {
 
@@ -26,9 +27,7 @@ const Verify: FC = () => {
     }
 
     return (
-        <div className="h-screen flex items-center justify-center p-10">
-            <Spinner label="Verifying..." color="success" size="lg" />
-        </div>
+        <Loading />
     )
 };
 
