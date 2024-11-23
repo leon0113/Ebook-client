@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 interface ApiError {
     error?: string;
+    message?: string;
     errors?: Record<string, string[]>
 }
 
@@ -20,6 +21,10 @@ export const parseError = (error: unknown) => {
         if (data.error) {
             // this means it's a single error message
             return toast(data.error)
+        }
+        if (data.message) {
+            // this means it's a single error message
+            return toast(data.message)
         }
     };
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Autocomplete, AutocompleteItem, Button, DatePicker, Input } from "@nextui-org/react";
 import { ChangeEventHandler, FC, FormEventHandler, useState } from "react";
 import { genreList, genres, languageList, languages } from "../../utils/data";
@@ -7,15 +8,18 @@ import { parseDate } from "@internationalized/date";
 import { z } from "zod";
 import ErrorList from "./ErrorList";
 import clsx from "clsx";
+import { parseError } from "../../utils/helper";
+import toast from "react-hot-toast";
 
 interface Props {
     title: string;
     submitBtnTitle: string;
     initialState?: unknown;
+    onSubmit(formData: FormData): Promise<void>
 }
 
 interface DefaultForm {
-    file?: File;
+    file?: File | null;
     cover?: File;
     title: string;
     description: string;
@@ -96,12 +100,13 @@ const newBookSchema = z.object({
 });
 
 
-const BookForm: FC<Props> = ({ title, submitBtnTitle }) => {
+const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
 
     const [bookInfo, setBookInfo] = useState<DefaultForm>(defaultBookInfo);
     const [cover, setCover] = useState("");
     const [isUpdate, setIsUpdate] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string[] | undefined }>();
+    const [busy, setBusy] = useState(false);
 
 
     const handleTextChange: ChangeEventHandler<HTMLInputElement> = ({
@@ -122,61 +127,92 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle }) => {
         const file = files[0];
 
         if (name === "cover" && file?.size) {
-            setCover(URL.createObjectURL(file));
-        } else {
-            setCover("");
+            try {
+                setCover(URL.createObjectURL(file));
+            } catch (error) {
+                setCover("");
+            }
         }
 
         setBookInfo({ ...bookInfo, [name]: file });
     };
 
-    const handleBookCreate = () => {
-        const formData = new FormData();
-        const { file, cover } = bookInfo
-        // validate book file (must be epub type)
-        console.log(file?.type);
-        if (file?.type !== 'application/epub+zip') {
-            return setErrors({ ...errors, file: ["Please select a valid (.epub) file "] })
-        } else {
-            setErrors({ ...errors, file: undefined })
+    const handleBookCreate = async () => {
+        setBusy(true);
+        try {
+            const formData = new FormData();
+            const { file, cover } = bookInfo;
+
+            // validate book file (must be epub type)
+            if (file?.type !== 'application/epub+zip') {
+                return setErrors({ ...errors, file: ["Please select a valid (.epub) file "] })
+            } else {
+                setErrors({ ...errors, file: undefined })
+            }
+
+            if (file) {
+                formData.append("book", file);
+            }
+
+            // validate book file (must be epub type)
+            if (cover && !cover.type.startsWith("image/")) {
+                return setErrors({ ...errors, cover: ["Please select a valid image"] })
+            } else {
+                setErrors({ ...errors, cover: undefined })
+            }
+
+            if (cover) {
+                formData.append("cover", cover)
+            };
+
+            // validate data for create book
+            const bookToUpload: ICreateBook = {
+                title: bookInfo.title,
+                description: bookInfo.description,
+                genre: bookInfo.genre,
+                language: bookInfo.language,
+                publicationName: bookInfo.publicationName,
+                publishedAt: bookInfo.publishedAt,
+                price: {
+                    mrp: Number(bookInfo.mrp),
+                    sale: Number(bookInfo.sale),
+                },
+                fileInfo: {
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                },
+            }
+
+            const result = newBookSchema.safeParse(bookToUpload);
+            if (!result.success) {
+                return setErrors(result.error.flatten().fieldErrors);
+            };
+
+            for (const key in bookToUpload) {
+                type keyType = keyof typeof bookToUpload;
+                const value = bookToUpload[key as keyType];
+
+                if (typeof value === "string") {
+                    formData.append(key, value);
+                }
+
+                if (typeof value === "object") {
+                    formData.append(key, JSON.stringify(value));
+                }
+            }
+
+            await onSubmit(formData);
+            toast('Book uploaded successfully', { duration: 3000 })
+            setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
+            setCover('');
+            // window.location.reload();
+
+        } catch (error) {
+            parseError(error);
+        } finally {
+            setBusy(false);
         }
-
-        // validate book file (must be epub type)
-        if (cover && !cover.type.startsWith("image/")) {
-            return setErrors({ ...errors, cover: ["Please select a valid image"] })
-        } else {
-            setErrors({ ...errors, cover: undefined })
-        }
-
-        if (cover) {
-            formData.append("cover", cover)
-        };
-
-        // validate data for create book
-        const bookToUpload: ICreateBook = {
-            title: bookInfo.title,
-            description: bookInfo.description,
-            genre: bookInfo.genre,
-            language: bookInfo.language,
-            publicationName: bookInfo.publicationName,
-            publishedAt: bookInfo.publishedAt,
-            price: {
-                mrp: Number(bookInfo.mrp),
-                sale: Number(bookInfo.sale),
-            },
-            fileInfo: {
-                name: file.name,
-                size: file.size,
-                type: file.type,
-            },
-        }
-
-        const result = newBookSchema.safeParse(bookToUpload);
-        if (!result.success) {
-            return setErrors(result.error.flatten().fieldErrors);
-        };
-
-        console.log(result);
 
     };
 
