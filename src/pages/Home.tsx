@@ -1,9 +1,9 @@
 import useAuth from "../hooks/useAuth"
 
 export default function Home() {
-    const authStatus = useAuth();
+    const { status } = useAuth();
 
-    console.log(authStatus);
+    console.log(status);
     return (
         <div>Home</div>
     )

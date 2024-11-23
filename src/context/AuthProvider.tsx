@@ -39,7 +39,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
     }
 
     useEffect(() => {
-        dispatch(updateStatus('busy'));
         client.get('/auth/profile')
             .then(({ data }) => {
                 dispatch(updateProfile(data.profile));

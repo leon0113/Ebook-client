@@ -1,18 +1,14 @@
 import { FC } from "react";
-import { Navigate } from "react-router-dom";
 import client from "../api/client";
 import NewUserForm from "../components/common/NewUserForm";
-import useAuth from "../hooks/useAuth";
+// import { useNavigate } from "react-router-dom";
 
 const NewUser: FC = () => {
-    const { profile } = useAuth();
+    // const navigate = useNavigate();
 
     const handleSubmit = async (formData: FormData) => {
         await client.put('/auth/profile', formData);
-    }
-
-    if (profile?.signedUp === true) {
-        return <Navigate to='/' />
+        // navigate('/')
     }
 
     return (

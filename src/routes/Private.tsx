@@ -6,6 +6,7 @@ import Loading from "../components/common/Loading";
 const Private: FC = () => {
 
     const { status } = useAuth();
+    console.log(status);
     const notLoggedIn = status === 'unauthenticated'
 
     const busy = status === 'busy'

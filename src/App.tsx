@@ -8,8 +8,10 @@ import NewUser from './pages/NewUser'
 import { Toaster } from 'react-hot-toast'
 import Profile from './pages/Profile'
 import UpdateProfile from './pages/UpdateProfile'
-import Guest from './routes/Guest'
-import Private from './routes/Private'
+// import Guest from './routes/Guest'
+// import Private from './routes/Private'
+import NewBookCreate from './pages/NewBookCreate'
+import UpdateBook from './pages/UpdateBook'
 
 
 function App() {
@@ -19,15 +21,22 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/verify' element={<Verify />} />
-        <Route element={<Private />} >
-          <Route path='/new-user' element={<NewUser />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/update-profile' element={<UpdateProfile />} />
-        </Route>
-        <Route element={<Guest />} >
-          <Route path='/sign-up' element={<SignUp />} />
-        </Route>
+
+        <Route path='/create-new-book' element={<NewBookCreate />} />
+        <Route path='/update-book' element={<UpdateBook />} />
+
+
+        {/* <Route element={<Private />} > */}
+        <Route path='/new-user' element={<NewUser />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/update-profile' element={<UpdateProfile />} />
+        {/* </Route> */}
+
+        {/* <Route element={<Guest />} > */}
+        <Route path='/sign-up' element={<SignUp />} />
+        {/* </Route> */}
       </Routes>
+
       <Toaster position="top-center" />
     </Container>
   )
