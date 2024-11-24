@@ -10,6 +10,7 @@ import { FaBookReader } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import ProfileOptions from "../profile/ProfileOptions";
+import DarkModeSwitch from "./DarkModeSwitch";
 
 
 
@@ -25,6 +26,9 @@ const Navbar: FC = () => {
       </NavbarBrand>
 
       <NavbarContent justify="end">
+        <NavbarItem>
+          <DarkModeSwitch />
+        </NavbarItem>
         {/* cart item */}
         <NavbarItem>
           <Link to="/cart">
