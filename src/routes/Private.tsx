@@ -4,15 +4,16 @@ import { Navigate, Outlet } from "react-router-dom";
 import Loading from "../components/common/Loading";
 
 const Private: FC = () => {
-
     const { status } = useAuth();
-    console.log(status);
-    const notLoggedIn = status === 'unauthenticated'
+    console.log("Private: ", status);
 
-    const busy = status === 'busy'
-    if (busy) return <Loading />
+    if (status === 'busy') return <Loading />;
 
-    return notLoggedIn ? <Navigate to='/sign-up' /> : <Outlet />
+    if (status !== 'authenticated') {
+        return <Navigate to="/sign-up" />;
+    }
+
+    return <Outlet />;
 };
 
-export default Private
+export default Private;

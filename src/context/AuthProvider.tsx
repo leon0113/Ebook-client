@@ -27,7 +27,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
     const signOut = async () => {
         dispatch(updateStatus('busy'));
-        dispatch(updateStatus('unauthenticated'));
         try {
             await client.post('/auth/logout');
             dispatch(updateStatus('unauthenticated'));

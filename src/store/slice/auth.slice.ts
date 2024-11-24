@@ -19,7 +19,7 @@ export interface AuthState {
 
 const initialState: AuthState = {
     profile: null,
-    status: 'unauthenticated',
+    status: 'busy',
 }
 
 const slice = createSlice({

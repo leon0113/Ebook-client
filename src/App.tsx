@@ -12,6 +12,12 @@ import UpdateProfile from './pages/UpdateProfile'
 // import Private from './routes/Private'
 import NewBookCreate from './pages/NewBookCreate'
 import UpdateBook from './pages/UpdateBook'
+import Private from './routes/Private'
+import Guest from './routes/Guest'
+import AuthorRegister from './pages/AuthorRegister'
+import UpdateAuthor from './pages/UpdateAuthor'
+import Author from './routes/Author'
+import NotFound from './pages/NotFound'
 
 
 function App() {
@@ -21,20 +27,25 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/not-found' element={<NotFound />} />
 
-        <Route path='/create-new-book' element={<NewBookCreate />} />
-        <Route path='/update-book/:slug' element={<UpdateBook />} />
+        <Route element={<Private />}>
+          <Route path='/new-user' element={<NewUser />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/update-profile' element={<UpdateProfile />} />
+          <Route path='/author-registration' element={<AuthorRegister />} />
 
+          <Route element={<Author />}>
+            <Route path='/update-author' element={<UpdateAuthor />} />
+            <Route path='/create-new-book' element={<NewBookCreate />} />
+            <Route path='/update-book/:slug' element={<UpdateBook />} />
+          </Route>
 
-        {/* <Route element={<Private />} > */}
-        <Route path='/new-user' element={<NewUser />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/update-profile' element={<UpdateProfile />} />
-        {/* </Route> */}
+        </Route>
 
-        {/* <Route element={<Guest />} > */}
-        <Route path='/sign-up' element={<SignUp />} />
-        {/* </Route> */}
+        <Route element={<Guest />} >
+          <Route path='/sign-up' element={<SignUp />} />
+        </Route>
       </Routes>
 
       <Toaster position="top-center" />

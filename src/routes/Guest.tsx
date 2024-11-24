@@ -8,8 +8,15 @@ const Guest: FC = () => {
     const { status } = useAuth();
     const isLoggedIn = status === 'authenticated'
     const busy = status === 'busy'
+    console.log("Guest: ", status);
+
     if (busy) return <Loading />
-    return isLoggedIn ? <Navigate to='/profile' /> : <Outlet />
+    if (isLoggedIn) {
+        return <Navigate to='/profile' />
+    } else {
+        return <Outlet />
+    }
+
 };
 
 export default Guest
