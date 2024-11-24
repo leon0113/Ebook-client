@@ -23,7 +23,7 @@ function App() {
         <Route path='/verify' element={<Verify />} />
 
         <Route path='/create-new-book' element={<NewBookCreate />} />
-        <Route path='/update-book' element={<UpdateBook />} />
+        <Route path='/update-book/:slug' element={<UpdateBook />} />
 
 
         {/* <Route element={<Private />} > */}

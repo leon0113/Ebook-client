@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Autocomplete, AutocompleteItem, Button, DatePicker, Input } from "@nextui-org/react";
-import { ChangeEventHandler, FC, FormEventHandler, useState } from "react";
+import { ChangeEventHandler, FC, FormEventHandler, useEffect, useState } from "react";
 import { genreList, genres, languageList, languages } from "../../utils/data";
 import PosterSelector from "../PosterSelector";
 import RichEditor from "../rich-editor";
@@ -11,10 +10,23 @@ import clsx from "clsx";
 import { parseError } from "../../utils/helper";
 import toast from "react-hot-toast";
 
+export interface InitialBookToUpdate {
+    id: string;
+    slug: string;
+    title: string;
+    description: string;
+    genre: string;
+    language: string;
+    cover?: string;
+    price: { mrp: string; sale: string };
+    publicationName: string;
+    publishedAt: string;
+}
+
 interface Props {
     title: string;
     submitBtnTitle: string;
-    initialState?: unknown;
+    initialState?: InitialBookToUpdate;
     onSubmit(formData: FormData): Promise<void>
 }
 
@@ -100,7 +112,7 @@ const newBookSchema = z.object({
 });
 
 
-const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
+const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) => {
 
     const [bookInfo, setBookInfo] = useState<DefaultForm>(defaultBookInfo);
     const [cover, setCover] = useState("");
@@ -154,7 +166,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
                 formData.append("book", file);
             }
 
-            // validate book file (must be epub type)
+            // validate cover image (must be a image)
             if (cover && !cover.type.startsWith("image/")) {
                 return setErrors({ ...errors, cover: ["Please select a valid image"] })
             } else {
@@ -215,6 +227,36 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
         }
 
     };
+
+    useEffect(() => {
+        if (initialState) {
+            setIsUpdate(true);
+
+            const {
+                title,
+                description,
+                language,
+                genre,
+                publicationName,
+                publishedAt,
+                price,
+                cover,
+            } = initialState;
+
+            setBookInfo({
+                title,
+                description,
+                language,
+                genre,
+                publicationName,
+                publishedAt,
+                mrp: price.mrp,
+                sale: price.sale,
+            });
+
+            if (cover) setCover(cover);
+        }
+    }, [initialState])
 
     const handleBookUpdate = () => {
 
@@ -306,6 +348,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
                 label="Language"
                 placeholder="Select a Language"
                 defaultSelectedKey={bookInfo.language}
+                selectedKey={bookInfo.language}
                 onSelectionChange={(key = '') => {
                     setBookInfo({ ...bookInfo, language: key as string })
                 }}
@@ -326,6 +369,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit }) => {
                 label="Genre"
                 placeholder="Select a Genre"
                 defaultSelectedKey={bookInfo.genre}
+                selectedKey={bookInfo.genre}
                 onSelectionChange={(key = '') => {
                     setBookInfo({ ...bookInfo, genre: key as string })
                 }}
