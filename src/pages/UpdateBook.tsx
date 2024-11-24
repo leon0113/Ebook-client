@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import client from "../api/client";
 import { parseError } from "../utils/helper";
 import Loading from "../components/common/Loading";
+import toast from "react-hot-toast";
 
 const UpdateBook: FC = () => {
     const { slug } = useParams();
@@ -23,11 +24,16 @@ const UpdateBook: FC = () => {
         }
         fetchBookDetails();
     }, [slug]);
-    console.log(bookInfo);
+
+    const handleSubmit = async (data: FormData) => {
+        const res = await client.patch('/book', data);
+        toast(res.data.message);
+    }
+
     if (busy) return <Loading />
 
     return (
-        <BookForm initialState={bookInfo} title='Update Your Book' submitBtnTitle='Update' />
+        <BookForm onSubmit={handleSubmit} initialState={bookInfo} title='Update Your Book' submitBtnTitle='Update' />
     )
 }
 

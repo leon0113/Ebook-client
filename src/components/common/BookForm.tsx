@@ -71,6 +71,25 @@ interface ICreateBook {
     };
 };
 
+interface IUpdateBook {
+    title: string;
+    description: string;
+    language: string;
+    publishedAt?: string;
+    publicationName: string;
+    genre: string;
+    slug: string,
+    price: {
+        mrp: number;
+        sale: number;
+    };
+    fileInfo?: {
+        type: string;
+        name: string;
+        size: number;
+    };
+};
+
 
 const commonBookSchema = {
     title: z.string().trim().min(5, "Title is too short!"),
@@ -109,6 +128,10 @@ const fileInfoSchema = z.object({
 const newBookSchema = z.object({
     ...commonBookSchema,
     fileInfo: fileInfoSchema,
+});
+const updateBookSchema = z.object({
+    ...commonBookSchema,
+    fileInfo: fileInfoSchema.optional(),
 });
 
 
@@ -258,8 +281,85 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
         }
     }, [initialState])
 
-    const handleBookUpdate = () => {
+    const handleBookUpdate = async () => {
+        setBusy(true);
+        try {
+            const formData = new FormData();
+            const { file, cover } = bookInfo;
 
+            // validate book file (must be epub type)
+            if (file && file?.type !== 'application/epub+zip') {
+                return setErrors({ ...errors, file: ["Please select a valid (.epub) file "] })
+            } else {
+                setErrors({ ...errors, file: undefined })
+            }
+
+            if (file) {
+                formData.append("book", file);
+            }
+
+            // validate cover image (must be a image)
+            if (cover && !cover.type.startsWith("image/")) {
+                return setErrors({ ...errors, cover: ["Please select a valid image"] })
+            } else {
+                setErrors({ ...errors, cover: undefined })
+            }
+
+            if (cover) {
+                formData.append("cover", cover)
+            };
+
+            // validate data for create book
+            const bookToUpload: IUpdateBook = {
+                title: bookInfo.title,
+                description: bookInfo.description,
+                genre: bookInfo.genre,
+                language: bookInfo.language,
+                publicationName: bookInfo.publicationName,
+                publishedAt: bookInfo.publishedAt,
+                slug: initialState?.slug!,
+                price: {
+                    mrp: Number(bookInfo.mrp),
+                    sale: Number(bookInfo.sale),
+                },
+            };
+
+            if (file) {
+                bookToUpload.fileInfo = {
+                    name: file?.name,
+                    size: file.size,
+                    type: file.type,
+                }
+            }
+
+            const result = updateBookSchema.safeParse(bookToUpload);
+            if (!result.success) {
+                return setErrors(result.error.flatten().fieldErrors);
+            };
+
+            for (const key in bookToUpload) {
+                type keyType = keyof typeof bookToUpload;
+                const value = bookToUpload[key as keyType];
+
+                if (typeof value === "string") {
+                    formData.append(key, value);
+                }
+
+                if (typeof value === "object") {
+                    formData.append(key, JSON.stringify(value));
+                }
+            }
+
+            await onSubmit(formData);
+            setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
+            setCover('');
+            // window.location.reload();
+
+        } catch (error) {
+            parseError(error);
+        } finally {
+            setBusy(false);
+        }
     };
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -428,7 +528,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                     <ErrorList errors={errors?.price} />
                 </div>
             </div>
-            <Button type="submit" className="w-full">{submitBtnTitle}</Button>
+            <Button isLoading={busy} type="submit" className="w-full">{submitBtnTitle}</Button>
         </form>
     );
 };
