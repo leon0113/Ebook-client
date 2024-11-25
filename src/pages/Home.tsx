@@ -1,10 +1,12 @@
+import BookByGenre from "../components/BookByGenre"
 import Hero from "../components/Hero"
 
 export default function Home() {
 
     return (
-        <div>
+        <div className="space-y-10 px-5 lg:p-0">
             <Hero />
+            <BookByGenre genre="Fantasy" />
         </div>
     )
 }

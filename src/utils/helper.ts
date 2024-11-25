@@ -33,4 +33,23 @@ export const parseError = (error: unknown) => {
     };
 
     toast('Something went wrong!')
-}
+};
+
+
+export const calDiscount = (price: { mrp: string; sale: string }) => {
+    const { mrp, sale } = price;
+    const mrpNum = Number(mrp);
+    const saleNum = Number(sale);
+
+    return Math.round(((mrpNum - saleNum) / mrpNum) * 100)
+};
+
+
+export const formatPrice = (amount: number) => {
+    const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+    });
+
+    return formatter.format(amount);
+};
