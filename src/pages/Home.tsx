@@ -7,6 +7,8 @@ export default function Home() {
         <div className="space-y-10 px-5 lg:p-0">
             <Hero />
             <BookByGenre genre="Fantasy" />
+            <BookByGenre genre="Thriller" />
+            <BookByGenre genre="Action" />
         </div>
     )
 }

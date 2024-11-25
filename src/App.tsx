@@ -18,6 +18,7 @@ import AuthorRegister from './pages/AuthorRegister'
 import UpdateAuthor from './pages/UpdateAuthor'
 import Author from './routes/Author'
 import NotFound from './pages/NotFound'
+import BookPage from './pages/BookPage'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/book/:slug' element={<BookPage />} />
         <Route path='/not-found' element={<NotFound />} />
 
         <Route element={<Private />}>
