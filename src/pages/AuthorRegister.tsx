@@ -9,16 +9,14 @@ const AuthorRegister: FC = () => {
 
     const handleSubmit = async (data: IAuthorInfo) => {
         const res = await client.post('/author/register', data);
-        toast.success(res.data.message);
-        navigate('/profile')
+        toast.success(res.data.message, { duration: 3000 });
+        navigate('/profile');
+        window.location.reload();
     }
 
     return (
         <div>
-
             <AuthorForm onSubmit={handleSubmit} btnTitle="Register as an Author!" />
-
-
         </div>
 
     )

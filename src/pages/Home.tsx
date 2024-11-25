@@ -1,10 +1,10 @@
-import useAuth from "../hooks/useAuth"
+import Hero from "../components/Hero"
 
 export default function Home() {
-    const { status } = useAuth();
 
-    console.log(status);
     return (
-        <div>Home</div>
+        <div>
+            <Hero />
+        </div>
     )
 }

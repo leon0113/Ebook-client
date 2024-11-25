@@ -1,5 +1,5 @@
 import { Switch } from "@nextui-org/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
 
 const DarkModeSwitch: FC = () => {
@@ -11,11 +11,11 @@ const DarkModeSwitch: FC = () => {
         else localStorage.removeItem("theme")
     }
 
-    const enableDarkMode = () => {
+    const enableDarkMode = useCallback(() => {
         document.documentElement.classList.add("dark")
         updateLocalStorage('dark');
         setDarkMode(true)
-    };
+    }, []);
 
     const disableDarkMode = () => {
         document.documentElement.classList.remove("dark");
@@ -26,7 +26,7 @@ const DarkModeSwitch: FC = () => {
         if (localStorage.getItem('theme') === 'dark') {
             enableDarkMode()
         }
-    }, [])
+    }, [enableDarkMode])
 
     return (
         <Switch

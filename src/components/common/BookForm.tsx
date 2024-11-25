@@ -165,6 +165,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             try {
                 setCover(URL.createObjectURL(file));
             } catch (error) {
+                parseError(error);
                 setCover("");
             }
         }
@@ -317,6 +318,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 language: bookInfo.language,
                 publicationName: bookInfo.publicationName,
                 publishedAt: bookInfo.publishedAt,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                 slug: initialState?.slug!,
                 price: {
                     mrp: Number(bookInfo.mrp),

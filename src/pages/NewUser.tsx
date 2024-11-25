@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { useDispatch } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import client from "../api/client";
 import NewUserForm from "../components/common/NewUserForm";

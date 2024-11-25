@@ -1,11 +1,11 @@
 import { Button, Input } from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
-import { MdDelete, MdDeleteOutline, MdOutlineAdd } from "react-icons/md";
-import useAuth from "../../hooks/useAuth";
-import RichEditor from "../rich-editor";
+import { MdDeleteOutline, MdOutlineAdd } from "react-icons/md";
 import { z } from "zod";
-import ErrorList from "./ErrorList";
+import useAuth from "../../hooks/useAuth";
 import { parseError } from "../../utils/helper";
+import RichEditor from "../rich-editor";
+import ErrorList from "./ErrorList";
 
 export interface IAuthorInfo {
     name: string;
@@ -102,6 +102,7 @@ const AuthorForm: FC<Props> = ({ btnTitle, onSubmit, initialState }) => {
             })
 
             const data = {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                 name: profile?.name!,
                 about,
                 socialLinks: links

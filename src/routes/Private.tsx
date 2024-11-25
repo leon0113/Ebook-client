@@ -5,7 +5,6 @@ import Loading from "../components/common/Loading";
 
 const Private: FC = () => {
     const { status } = useAuth();
-    console.log("Private: ", status);
 
     if (status === 'busy') return <Loading />;
 
