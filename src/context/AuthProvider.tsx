@@ -14,6 +14,7 @@ interface IAuthContext {
     signOut(): void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<IAuthContext>(({
     profile: null,
     status: 'unauthenticated',
