@@ -1,7 +1,7 @@
 import { createContext, FC, ReactNode } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { TState } from "../store";
-import { CartItem } from "../store/slice/cart.slice";
+import { CartItem, updateCartItem } from "../store/slice/cart.slice";
 
 interface Props {
     children: ReactNode;
@@ -9,19 +9,29 @@ interface Props {
 
 interface ICartContext {
     id?: string;
-    items: CartItem[]
+    items: CartItem[];
+    updateCart(item: CartItem): void;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext<ICartContext>({
-    items: []
+    items: [],
+    updateCart() { }
 })
 
 const CartProvider: FC<Props> = ({ children }) => {
 
-    const cart = useSelector((state: TState) => state.cart)
+    const cart = useSelector((state: TState) => state.cart);
+    const dispatch = useDispatch();
 
-    return <CartContext.Provider value={{ items: cart.items }}>
+    const updateCart = (item: CartItem) => {
+        // update the UI
+        dispatch(updateCartItem(item))
+        // update the server
+
+    }
+
+    return <CartContext.Provider value={{ items: cart.items, updateCart }}>
         {children}
     </CartContext.Provider>
 }

@@ -8,17 +8,25 @@ import { IBookDetails } from "../pages/BookPage";
 import { calDiscount, formatPrice } from "../utils/helper";
 import RichEditor from "./rich-editor";
 import { GoFileDirectoryFill } from "react-icons/go";
+import useCart from "../hooks/useCart";
 
 interface Props {
     book?: IBookDetails
 }
 
+
 const BookDetails: FC<Props> = ({ book }) => {
+    const { updateCart } = useCart();
     if (!book) return null;
+
 
     const alreadyPurchased = false;
 
-    const { cover, title, authorId, publicationName, price, rating, id, description, language, fileInfo, genre, publishedAt, slug } = book
+    const { cover, title, authorId, publicationName, price, rating, id, description, language, fileInfo, genre, publishedAt, slug } = book;
+
+    const handleCartUpdate = () => {
+        updateCart({ product: book, quantity: 1 })
+    };
 
     return (
         <div className="md:flex">
@@ -103,6 +111,7 @@ const BookDetails: FC<Props> = ({ book }) => {
                                 <Button
                                     startContent={<TbShoppingCartPlus />}
                                     variant="light"
+                                    onClick={handleCartUpdate}
                                 >
                                     Add to Cart
                                 </Button>
