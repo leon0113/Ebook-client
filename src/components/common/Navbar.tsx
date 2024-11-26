@@ -9,12 +9,15 @@ import { FC } from "react";
 import { FaBookReader } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import useCart from "../../hooks/useCart";
 import ProfileOptions from "../profile/ProfileOptions";
 import DarkModeSwitch from "./DarkModeSwitch";
 
 
 
 const Navbar: FC = () => {
+  const { totalCount } = useCart()
+
 
   return (
     <NextUINav>
@@ -32,7 +35,7 @@ const Navbar: FC = () => {
         {/* cart item */}
         <NavbarItem>
           <Link to="/cart">
-            <Badge content="0" color="danger" shape="circle">
+            <Badge content={totalCount} color="danger" shape="circle">
               <FaCartShopping size={24} />
             </Badge>
           </Link>

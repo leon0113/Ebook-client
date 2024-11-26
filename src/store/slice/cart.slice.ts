@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TState } from "..";
+import { ICartItemsInfo } from "../../context/CartProvider";
 import { IBookDetails } from "../../pages/BookPage";
 
 export interface CartItem {
@@ -8,7 +10,7 @@ export interface CartItem {
 
 export interface CartState {
     id?: string;
-    items: CartItem[]
+    items: (CartItem | ICartItemsInfo)[]
 };
 
 const initialState: CartState = {
@@ -41,6 +43,16 @@ const slice = createSlice({
                 }
             }
         },
+    }
+});
+
+export const getCartState = createSelector((state: TState) => state, ({ cart }) => {
+    return {
+        totalCount: cart.items.reduce((total, cartItem) => {
+            total += cartItem.quantity
+            return total;
+        }, 0),
+        ...cart
     }
 });
 
