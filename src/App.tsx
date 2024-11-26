@@ -31,13 +31,13 @@ function App() {
         <Route path='/verify' element={<Verify />} />
         <Route path='/book/:slug' element={<BookPage />} />
         <Route path='/not-found' element={<NotFound />} />
+        <Route path='/cart' element={<Cart />} />
 
         <Route element={<Private />}>
           <Route path='/new-user' element={<NewUser />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/update-profile' element={<UpdateProfile />} />
           <Route path='/author-registration' element={<AuthorRegister />} />
-          <Route path='/cart' element={<Cart />} />
 
           <Route element={<Author />}>
             <Route path='/update-author' element={<UpdateAuthor />} />

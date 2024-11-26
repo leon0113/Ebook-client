@@ -5,7 +5,7 @@ export interface Props {
     itemsCount?: number;
 }
 
-const Cart: FC<Props> = ({ itemsCount = 2 }): JSX.Element => {
+const SkeCart: FC<Props> = ({ itemsCount = 2 }): JSX.Element => {
     const dummyItems = Array(itemsCount).fill("");
 
     return (
@@ -49,4 +49,4 @@ const Cart: FC<Props> = ({ itemsCount = 2 }): JSX.Element => {
     );
 };
 
-export default Cart;
+export default SkeCart;

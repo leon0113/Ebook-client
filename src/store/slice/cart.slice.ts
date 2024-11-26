@@ -3,10 +3,10 @@ import { TState } from "..";
 import { ICartItemsInfo } from "../../context/CartProvider";
 import { IBookDetails } from "../../pages/BookPage";
 
-export interface CartItem {
+export type CartItem = {
     product: IBookDetails;
     quantity: number;
-}
+} | ICartItemsInfo
 
 export interface CartState {
     id?: string;
@@ -50,6 +50,14 @@ export const getCartState = createSelector((state: TState) => state, ({ cart }) 
     return {
         totalCount: cart.items.reduce((total, cartItem) => {
             total += cartItem.quantity
+            return total;
+        }, 0),
+        subTotal: cart.items.reduce((total, cartItem) => {
+            total += Number(cartItem.product.price.mrp) * cartItem.quantity
+            return total;
+        }, 0),
+        totalPrice: cart.items.reduce((total, cartItem) => {
+            total += Number(cartItem.product.price.sale) * cartItem.quantity
             return total;
         }, 0),
         ...cart
