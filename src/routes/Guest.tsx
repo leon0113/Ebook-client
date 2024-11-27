@@ -8,7 +8,6 @@ const Guest: FC = () => {
     const { status } = useAuth();
     const isLoggedIn = status === 'authenticated'
     const busy = status === 'busy'
-    console.log("Guest: ", status);
 
     if (busy) return <Loading />
     if (isLoggedIn) {

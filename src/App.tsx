@@ -22,6 +22,7 @@ import BookPage from './pages/BookPage'
 import Cart from './pages/Cart'
 import PaymentSuccess from './pages/PaymentSuccess'
 import Orders from './pages/Orders'
+import Rate from './pages/Rate'
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <Route path='/author-registration' element={<AuthorRegister />} />
           <Route path='/payment-success' element={<PaymentSuccess />} />
           <Route path='/orders' element={<Orders />} />
+          <Route path='/rate/:bookId' element={<Rate />} />
 
           <Route element={<Author />}>
             <Route path='/update-author' element={<UpdateAuthor />} />
