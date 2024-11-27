@@ -21,6 +21,7 @@ import NotFound from './pages/NotFound'
 import BookPage from './pages/BookPage'
 import Cart from './pages/Cart'
 import PaymentSuccess from './pages/PaymentSuccess'
+import Orders from './pages/Orders'
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path='/update-profile' element={<UpdateProfile />} />
           <Route path='/author-registration' element={<AuthorRegister />} />
           <Route path='/payment-success' element={<PaymentSuccess />} />
+          <Route path='/orders' element={<Orders />} />
 
           <Route element={<Author />}>
             <Route path='/update-author' element={<UpdateAuthor />} />

@@ -2,10 +2,10 @@ import { Divider } from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import client from "../api/client";
-import SkeOrders from "../components/skeletons/SkeOrders";
+import SkePayments from "../components/skeletons/SkePayments";
 import { formatPrice, parseError } from "../utils/helper";
 
-interface IOrderRes {
+interface IPaymentRes {
     orders: {
         cover: string;
         id: string;
@@ -22,7 +22,7 @@ const PaymentSuccess: FC = () => {
     const [searchParams] = useSearchParams();
     const sessionId = searchParams.get("session_id");
     const [loading, setLoading] = useState(true);
-    const [order, setOrder] = useState<IOrderRes>();
+    const [order, setOrder] = useState<IPaymentRes>();
 
     useEffect(() => {
         if (!sessionId) return;
@@ -40,7 +40,7 @@ const PaymentSuccess: FC = () => {
         fetchOrderDetails();
     }, [sessionId])
 
-    if (loading) return <SkeOrders />
+    if (loading) return <SkePayments />
 
     return (
         <div className="p-5 lg:p-0">
@@ -74,6 +74,7 @@ const PaymentSuccess: FC = () => {
                     <p>Total Amount:</p>
                     <p>{formatPrice(Number(order?.totalAmount))}</p>
                 </div>
+                <Link to='/orders' className="mt-10 underline italic text-sky-700">Go to orders</Link>
             </div>
 
 
