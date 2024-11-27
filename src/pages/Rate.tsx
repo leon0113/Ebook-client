@@ -3,10 +3,11 @@ import { AxiosError } from "axios";
 import { FC, FormEventHandler, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegStar, FaStar } from "react-icons/fa6";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import client from "../api/client";
 import RichEditor from "../components/rich-editor";
 import { parseError } from "../utils/helper";
+import useAuth from "../hooks/useAuth";
 
 const Rate: FC = () => {
     const { bookId } = useParams();
@@ -14,6 +15,8 @@ const Rate: FC = () => {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [pending, setPending] = useState(true);
+    const { profile } = useAuth();
+    const navigate = useNavigate();
 
     const rating = Array(5).fill("");
 
@@ -30,6 +33,7 @@ const Rate: FC = () => {
             setLoading(true)
             await client.post('/review', { bookId, rating: selectedRating.length, content });
             toast.success("Review submitted successfully");
+            navigate(`/`)
         } catch (error) {
             parseError(error);
         } finally {
@@ -43,7 +47,7 @@ const Rate: FC = () => {
             try {
                 const { data } = await client.get(`/review/${bookId}`);
                 setContent(data.content || "");
-                updateRating(data.rating)
+                updateRating(data.rating);
             } catch (error) {
                 if (error instanceof AxiosError) {
                     if (error.response?.status === 404) return

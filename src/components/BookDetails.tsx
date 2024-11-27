@@ -72,7 +72,7 @@ const BookDetails: FC<Props> = ({ book }) => {
                     {
                         rating ?
                             <Chip className="bg-slate-800">
-                                <div className="flex space-x-1 items-center text-green-400">
+                                <div className="flex space-x-1 items-center text-yellow-400">
                                     <span className="">{rating}</span>
                                     <FaStar className="" />
                                 </div>
