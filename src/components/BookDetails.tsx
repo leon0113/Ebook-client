@@ -1,14 +1,16 @@
 import { Button, Chip, Divider } from "@nextui-org/react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FaEarthAfrica, FaRegCalendarDays, FaRegFileLines, FaStar } from "react-icons/fa6";
 import { PiFilmReelBold } from "react-icons/pi";
 import { TbShoppingCartPlus } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { IBookDetails } from "../pages/BookPage";
-import { calDiscount, formatPrice } from "../utils/helper";
+import { calDiscount, formatPrice, parseError } from "../utils/helper";
 import RichEditor from "./rich-editor";
 import { GoFileDirectoryFill } from "react-icons/go";
 import useCart from "../hooks/useCart";
+import client from "../api/client";
+import useAuth from "../hooks/useAuth";
 
 interface Props {
     book?: IBookDetails
@@ -17,16 +19,33 @@ interface Props {
 
 const BookDetails: FC<Props> = ({ book }) => {
     const { updateCart, loading } = useCart();
+    const { profile } = useAuth();
+    const [pending, setPending] = useState(false);
+
     if (!book) return null;
-
-
-    const alreadyPurchased = false;
 
     const { cover, title, authorId, publicationName, price, rating, id, description, language, fileInfo, genre, publishedAt, slug } = book;
 
     const handleCartUpdate = () => {
         updateCart({ product: book, quantity: 1 })
     };
+
+    const handleInstantCheckout = async () => {
+        try {
+            setPending(true);
+            const { data } = await client.post("/checkout/instant", { productId: id })
+            console.log(data.checkoutUrl);
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl
+            }
+        } catch (error) {
+            parseError(error)
+        } finally {
+            setPending(false)
+        }
+    };
+
+    const alreadyPurchased = profile?.books?.includes(book.id) || false;
 
     return (
         <div className="md:flex">
@@ -118,7 +137,8 @@ const BookDetails: FC<Props> = ({ book }) => {
                                 </Button>
                                 <Button
                                     variant="flat"
-                                    isLoading={loading}
+                                    isLoading={loading || pending}
+                                    onClick={handleInstantCheckout}
                                 >
                                     Buy Now
                                 </Button>

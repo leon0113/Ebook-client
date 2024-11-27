@@ -1,13 +1,31 @@
 import { Button, Chip, Divider } from "@nextui-org/react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FaMinus, FaPlus, FaRegTrashCan } from "react-icons/fa6";
 import SkeCart from "../components/skeletons/SkeCart";
 import useCart from "../hooks/useCart";
-import { calDiscount, formatPrice } from "../utils/helper";
+import { calDiscount, formatPrice, parseError } from "../utils/helper";
 import { MdOutlineShoppingCartCheckout } from "react-icons/md";
+import client from "../api/client";
 
 const Cart: FC = () => {
-    const { items, fetching, loading, subTotal, totalPrice, updateCart, totalCount, clearCart } = useCart();
+    const { items, fetching, loading, subTotal, totalPrice, updateCart, totalCount, clearCart, id } = useCart();
+    const [pending, setPending] = useState(false)
+
+
+    const handleCheckout = async () => {
+        try {
+            setPending(true);
+            const { data } = await client.post("/checkout", { cartId: id })
+            console.log(data.checkoutUrl);
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl
+            }
+        } catch (error) {
+            parseError(error)
+        } finally {
+            setPending(false)
+        }
+    }
 
 
     if (fetching) return <SkeCart />
@@ -99,7 +117,14 @@ const Cart: FC = () => {
                 </div>
 
                 <div className="text-right md:mt-3">
-                    <Button color="danger" radius="sm" size="lg" isLoading={loading} startContent={<MdOutlineShoppingCartCheckout size={18} />}>
+                    <Button
+                        color="danger"
+                        radius="sm"
+                        size="lg"
+                        isLoading={loading || pending}
+                        startContent={<MdOutlineShoppingCartCheckout size={18} />}
+                        onClick={handleCheckout}
+                    >
                         Checkout
                     </Button>
 

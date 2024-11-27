@@ -144,7 +144,7 @@ const CartProvider: FC<Props> = ({ children }) => {
         }
     }, [cart.items, profile])
 
-    return <CartContext.Provider value={{ items: cart.items, loading, updateCart, totalCount: cart.totalCount, fetching, subTotal: cart.subTotal, totalPrice: cart.totalPrice, clearCart }}>
+    return <CartContext.Provider value={{ items: cart.items, loading, updateCart, totalCount: cart.totalCount, fetching, subTotal: cart.subTotal, totalPrice: cart.totalPrice, clearCart, id: cart.id }}>
         {children}
     </CartContext.Provider>
 }
