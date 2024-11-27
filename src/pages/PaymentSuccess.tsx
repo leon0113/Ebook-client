@@ -1,9 +1,9 @@
+import { Divider } from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { formatPrice, parseError } from "../utils/helper";
 import client from "../api/client";
-import Loading from "../components/common/Loading";
-import { Divider } from "@nextui-org/react";
+import SkeOrders from "../components/skeletons/SkeOrders";
+import { formatPrice, parseError } from "../utils/helper";
 
 interface IOrderRes {
     orders: {
@@ -40,7 +40,7 @@ const PaymentSuccess: FC = () => {
         fetchOrderDetails();
     }, [sessionId])
 
-    if (loading) <Loading />
+    if (loading) return <SkeOrders />
 
     return (
         <div className="p-5 lg:p-0">
