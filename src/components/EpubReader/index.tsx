@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useEffect, useState } from "react";
 import { Book, Rendition } from 'epubjs'
 import Navigator from "./Navigator";
 import LoadingIndicator from "./LoadingIndicator";
+import TableOfContents, { BookNavList } from "./TableOfContents";
 
 interface Props {
     url?: object
@@ -22,11 +24,41 @@ const getElementSize = (id: string) => {
         height = result.height;
     }
     return { width, height };
+};
+
+const loadTableOfContent = async (book: Book) => {
+    const [nav, spine] = await Promise.all([book.loaded.navigation, book.loaded.spine]);
+
+
+    const { toc } = nav;
+    const navLabels: BookNavList[] = []
+
+    toc.forEach((item) => {
+        if (item.subitems?.length) {
+            navLabels.push({
+                label: { title: item.label, href: item.href },
+                subItems: item.subitems.map(({ label, href }) => {
+                    return {
+                        title: label,
+                        href
+                    }
+                })
+            })
+        } else {
+            navLabels.push({
+                label: { title: item.label, href: item.href },
+                subItems: []
+            })
+        }
+    })
+
+    return navLabels;
 }
 
 const EpubReader: FC<Props> = ({ url }) => {
     const [rendition, setRendition] = useState<Rendition>();
     const [loading, setLoading] = useState(true);
+    const [tableOfContent, setTableOfContent] = useState<BookNavList[]>([]);
 
     useEffect(() => {
         if (!url) return;
@@ -38,9 +70,8 @@ const EpubReader: FC<Props> = ({ url }) => {
         });
         rendition.display();
 
-        rendition.on("rendered", () => {
-            setLoading(false)
-        });
+        loadTableOfContent(book).then(setTableOfContent).finally(() => setLoading(false));
+
         setRendition(rendition);
 
         return () => {
@@ -58,6 +89,9 @@ const EpubReader: FC<Props> = ({ url }) => {
                 <Navigator side='left' onClick={() => rendition?.prev()} className="opacity-0 group-hover:opacity-100" />
                 <Navigator side='right' onClick={() => rendition?.next()} className="opacity-0  group-hover:opacity-100" />
             </div>
+            {/* ex data : [{ label: { title: "", href: "" }, subItems: [{ title: "", href: "" }] }] */}
+            <TableOfContents data={tableOfContent} />
+
         </div>
     )
 }
