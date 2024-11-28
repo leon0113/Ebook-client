@@ -1,14 +1,15 @@
+import { parseDate } from "@internationalized/date";
 import { Autocomplete, AutocompleteItem, Button, DatePicker, Input } from "@nextui-org/react";
+import clsx from "clsx";
 import { ChangeEventHandler, FC, FormEventHandler, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { z } from "zod";
 import { genreList, genres, languageList, languages } from "../../utils/data";
+import { parseError } from "../../utils/helper";
 import PosterSelector from "../PosterSelector";
 import RichEditor from "../rich-editor";
-import { parseDate } from "@internationalized/date";
-import { z } from "zod";
 import ErrorList from "./ErrorList";
-import clsx from "clsx";
-import { parseError } from "../../utils/helper";
-import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export interface InitialBookToUpdate {
     id: string;
@@ -142,13 +143,13 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
     const [isUpdate, setIsUpdate] = useState(false);
     const [errors, setErrors] = useState<{ [key: string]: string[] | undefined }>();
     const [busy, setBusy] = useState(false);
+    const navigate = useNavigate()
 
 
     const handleTextChange: ChangeEventHandler<HTMLInputElement> = ({
         target,
     }) => {
         const { value, name } = target;
-        // console.log(name, value);
         setBookInfo({ ...bookInfo, [name]: value });
     };
 
@@ -242,8 +243,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             toast('Book uploaded successfully', { duration: 3000 })
             setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
             setCover('');
-            // window.location.reload();
-
+            navigate('/')
         } catch (error) {
             parseError(error);
         } finally {
@@ -355,8 +355,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             await onSubmit(formData);
             setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
             setCover('');
-            // window.location.reload();
-
+            navigate('/');
         } catch (error) {
             parseError(error);
         } finally {

@@ -34,7 +34,6 @@ const BookDetails: FC<Props> = ({ book }) => {
         try {
             setPending(true);
             const { data } = await client.post("/checkout/instant", { productId: id })
-            console.log(data.checkoutUrl);
             if (data.checkoutUrl) {
                 window.location.href = data.checkoutUrl
             }

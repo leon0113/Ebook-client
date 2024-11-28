@@ -64,7 +64,7 @@ const BookByGenre: FC<Props> = ({ genre }) => {
                                     />
 
                                     <div className="w-full space-y-2">
-                                        <p className="font-bold line-clamp-2">{book.title}</p>
+                                        <p className="font-bold line-clamp-1">{book.title}</p>
                                         <Chip radius="sm" size="sm" color="danger">{calDiscount(book.price)}% Off</Chip>
                                     </div>
 

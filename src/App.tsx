@@ -24,7 +24,8 @@ import UpdateBook from './pages/UpdateBook'
 import Author from './routes/Author'
 import Guest from './routes/Guest'
 import Private from './routes/Private'
-import MyLibrary from './pages/Mylibrary'
+import MyLibrary from './pages/MyLibrary'
+import ReadingBook from './pages/ReadingBook'
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           <Route path='/orders' element={<Orders />} />
           <Route path='/rate/:bookId' element={<Rate />} />
           <Route path='/library' element={<MyLibrary />} />
+          <Route path='/read/:slug' element={<ReadingBook />} />
 
           <Route element={<Author />}>
             <Route path='/update-author' element={<UpdateAuthor />} />

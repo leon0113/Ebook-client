@@ -25,8 +25,7 @@ const MyLibrary: FC = () => {
     useEffect(() => {
         const fetchPurchasedBooks = async () => {
             try {
-                const { data } = await client.get('book/library')
-                console.log(data);
+                const { data } = await client.get('book/library');
                 setPurchasedBooks(data.books);
             } catch (error) {
                 parseError(error)
