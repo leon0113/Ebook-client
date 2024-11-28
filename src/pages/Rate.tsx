@@ -3,11 +3,10 @@ import { AxiosError } from "axios";
 import { FC, FormEventHandler, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegStar, FaStar } from "react-icons/fa6";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import client from "../api/client";
 import RichEditor from "../components/rich-editor";
 import { parseError } from "../utils/helper";
-import useAuth from "../hooks/useAuth";
 
 const Rate: FC = () => {
     const { bookId } = useParams();
@@ -15,8 +14,6 @@ const Rate: FC = () => {
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
     const [pending, setPending] = useState(true);
-    const { profile } = useAuth();
-    const navigate = useNavigate();
 
     const rating = Array(5).fill("");
 
@@ -33,7 +30,7 @@ const Rate: FC = () => {
             setLoading(true)
             await client.post('/review', { bookId, rating: selectedRating.length, content });
             toast.success("Review submitted successfully");
-            navigate(`/`)
+            window.history.back();
         } catch (error) {
             parseError(error);
         } finally {

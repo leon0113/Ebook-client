@@ -1,28 +1,30 @@
+import { Toaster } from 'react-hot-toast'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import Home from './pages/Home'
-import SignUp from './pages/SignUp'
 import Container from './components/common/Container'
-import Verify from './pages/Verify'
+import Home from './pages/Home'
 import NewUser from './pages/NewUser'
-import { Toaster } from 'react-hot-toast'
 import Profile from './pages/Profile'
+import SignUp from './pages/SignUp'
 import UpdateProfile from './pages/UpdateProfile'
+import Verify from './pages/Verify'
 // import Guest from './routes/Guest'
 // import Private from './routes/Private'
-import NewBookCreate from './pages/NewBookCreate'
-import UpdateBook from './pages/UpdateBook'
-import Private from './routes/Private'
-import Guest from './routes/Guest'
+import AuthorPage from './pages/AuthorPage'
 import AuthorRegister from './pages/AuthorRegister'
-import UpdateAuthor from './pages/UpdateAuthor'
-import Author from './routes/Author'
-import NotFound from './pages/NotFound'
 import BookPage from './pages/BookPage'
 import Cart from './pages/Cart'
-import PaymentSuccess from './pages/PaymentSuccess'
+import NewBookCreate from './pages/NewBookCreate'
+import NotFound from './pages/NotFound'
 import Orders from './pages/Orders'
+import PaymentSuccess from './pages/PaymentSuccess'
 import Rate from './pages/Rate'
+import UpdateAuthor from './pages/UpdateAuthor'
+import UpdateBook from './pages/UpdateBook'
+import Author from './routes/Author'
+import Guest from './routes/Guest'
+import Private from './routes/Private'
+import MyLibrary from './pages/Mylibrary'
 
 
 function App() {
@@ -35,6 +37,7 @@ function App() {
         <Route path='/book/:slug' element={<BookPage />} />
         <Route path='/not-found' element={<NotFound />} />
         <Route path='/cart' element={<Cart />} />
+        <Route path='/author/:id' element={<AuthorPage />} />
 
         <Route element={<Private />}>
           <Route path='/new-user' element={<NewUser />} />
@@ -44,6 +47,7 @@ function App() {
           <Route path='/payment-success' element={<PaymentSuccess />} />
           <Route path='/orders' element={<Orders />} />
           <Route path='/rate/:bookId' element={<Rate />} />
+          <Route path='/library' element={<MyLibrary />} />
 
           <Route element={<Author />}>
             <Route path='/update-author' element={<UpdateAuthor />} />

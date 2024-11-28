@@ -20,8 +20,8 @@ export interface InitialState {
     id: string;
     name: string;
     about: string;
-    socials: Array<{
-        id: number;
+    socialLinks: Array<{
+        id: string;
         value: string;
     }>;
     books: string;
@@ -79,7 +79,7 @@ const AuthorForm: FC<Props> = ({ btnTitle, onSubmit, initialState }) => {
 
     const updateInitialSocialLinks = () => {
         if (initialState) {
-            const formattedLinks = initialState.socials.map((link) => ({
+            const formattedLinks = initialState.socialLinks.map((link) => ({
                 id: Number(link.id),
                 value: link.value,
             }));

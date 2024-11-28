@@ -23,6 +23,7 @@ const UpdateAuthor: FC = () => {
         const fetchAuthorInfo = async () => {
             try {
                 const { data } = await client.get(`/author/${profile?.authorId}`);
+                console.log(data);
                 setInitialState(data);
             } catch (error) {
                 parseError(error)

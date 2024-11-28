@@ -1,61 +1,41 @@
 import { Chip } from "@nextui-org/react";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import client from "../api/client";
-import { calDiscount, formatPrice, parseError } from "../utils/helper";
+import { calDiscount, formatPrice } from "../utils/helper";
 import GenreTitle from "./common/GenreTitle";
-import SkeBookList from "./skeletons/SkeBookList";
+import { IRecommendedBooks } from "./Recommended";
 
 interface Props {
-    genre: string
-}
-
-interface IBookByGenre {
-    id: string;
+    data: IRecommendedBooks[];
     title: string;
-    cover?: string;
-    slug: string;
-    genre: string;
-    rating?: string;
-    language: string;
-    price: {
-        mrp: string;
-        sale: string;
-    };
 }
 
-const BookByGenre: FC<Props> = ({ genre }) => {
+// interface IBookByGenre {
+//     id: string;
+//     title: string;
+//     cover?: string;
+//     slug: string;
+//     genre: string;
+//     rating?: string;
+//     language: string;
+//     price: {
+//         mrp: string;
+//         sale: string;
+//     };
+// }
 
-    const [books, setBooks] = useState<IBookByGenre[]>([]);
-    const [loading, setLoading] = useState(true);
+const RecommendedBooks: FC<Props> = ({ title, data }) => {
 
 
-    useEffect(() => {
-        const fetchBookByGenre = async (genre: string) => {
-            try {
-                const { data } = await client.get(`/book/by-genre/${genre}`);
-                setBooks(data.books);
-            } catch (error) {
-                parseError(error)
-            } finally {
-                setLoading(false);
-            }
-        }
 
-        fetchBookByGenre(genre);
-    }, [genre]);
-
-    if (loading) {
-        return <SkeBookList />
-    }
 
     return (
         <div>
-            <GenreTitle title={genre} />
+            <GenreTitle title={title} />
             <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-5">
                 {
-                    books.map((book) => {
+                    data.map((book) => {
                         return (
                             <Link key={book.id} to={`/book/${book.slug}`} >
                                 <div className="flex flex-col items-center space-y-2">
@@ -96,4 +76,4 @@ const BookByGenre: FC<Props> = ({ genre }) => {
     )
 }
 
-export default BookByGenre;
+export default RecommendedBooks;

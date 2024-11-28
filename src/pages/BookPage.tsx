@@ -5,6 +5,7 @@ import { parseError } from "../utils/helper";
 import BookDetails from "../components/BookDetails";
 import SkeBookDetails from "../components/skeletons/SkeBookDetails";
 import ReviewSection, { iReviewRes } from "../components/ReviewSection";
+import Recommended from "../components/Recommended";
 
 export interface IBookDetails {
     id: string;
@@ -68,6 +69,7 @@ const BookPage: FC = () => {
     return (
         <div className="p-5 lg:p-0 space-y-10">
             <BookDetails book={bookDetails} />
+            <Recommended id={bookDetails?.id} />
             <ReviewSection id={bookDetails?.id} reviews={reviews} title={`${bookDetails?.title} Reviews`} />
         </div>
     )
