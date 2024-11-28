@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { Book } from 'epubjs'
+import Navigator from "./Navigator";
 
 interface Props {
     url?: object
@@ -21,6 +22,10 @@ const getElementSize = (id: string) => {
 }
 
 const EpubReader: FC<Props> = ({ url }) => {
+
+    const handleNavigation = () => {
+
+    }
 
     useEffect(() => {
         if (!url) return;
@@ -44,8 +49,11 @@ const EpubReader: FC<Props> = ({ url }) => {
 
     return (
         <div className="h-screen">
-            <div id={wrapper} className="h-full">
+            <div id={wrapper} className="h-full relative group">
                 <div id={container} />
+
+                <Navigator side='left' onClick={handleNavigation} className="opacity-0 group-hover:opacity-100" />
+                <Navigator side='right' onClick={handleNavigation} className="opacity-0  group-hover:opacity-100" />
             </div>
         </div>
     )
