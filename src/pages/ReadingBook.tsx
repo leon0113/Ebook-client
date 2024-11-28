@@ -1,9 +1,40 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import EpubReader from "../components/EpubReader";
+import { parseError } from "../utils/helper";
+import client from "../api/client";
+import { useParams } from "react-router-dom";
+
+interface IBookURL {
+    settings: {
+        highlights: string[];
+        lastLocation: string;
+    };
+    url: string;
+}
 
 const ReadingBook: FC = () => {
+    const { slug } = useParams();
+    const [url, setUrl] = useState<object>();
+
+    useEffect(() => {
+        if (!slug) return;
+
+        const fetchBookUrl = async () => {
+            try {
+                const { data } = await client.get<IBookURL>(`/book/read/${slug}`);
+                const res = await client.get(data.url, { responseType: 'blob' });
+                console.log(res.data);
+                setUrl(res.data);
+            } catch (error) {
+                parseError(error)
+            }
+        };
+        fetchBookUrl();
+    }, [slug])
+
     return (
         <div>
-
+            <EpubReader url={url} />
         </div>
     )
 }
