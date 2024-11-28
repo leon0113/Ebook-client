@@ -1,10 +1,13 @@
-import { FC, useEffect } from "react";
-import { Book } from 'epubjs'
+import { FC, useEffect, useState } from "react";
+import { Book, Rendition } from 'epubjs'
 import Navigator from "./Navigator";
+import LoadingIndicator from "./LoadingIndicator";
 
 interface Props {
     url?: object
 }
+
+
 
 const container = "epub_container";
 const wrapper = "epub_wrapper";
@@ -22,10 +25,8 @@ const getElementSize = (id: string) => {
 }
 
 const EpubReader: FC<Props> = ({ url }) => {
-
-    const handleNavigation = () => {
-
-    }
+    const [rendition, setRendition] = useState<Rendition>();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!url) return;
@@ -38,8 +39,9 @@ const EpubReader: FC<Props> = ({ url }) => {
         rendition.display();
 
         rendition.on("rendered", () => {
-            rendition.next()
+            setLoading(false)
         });
+        setRendition(rendition);
 
         return () => {
             if (book)
@@ -49,11 +51,12 @@ const EpubReader: FC<Props> = ({ url }) => {
 
     return (
         <div className="h-screen">
+            <LoadingIndicator visible={loading} />
             <div id={wrapper} className="h-full relative group">
                 <div id={container} />
 
-                <Navigator side='left' onClick={handleNavigation} className="opacity-0 group-hover:opacity-100" />
-                <Navigator side='right' onClick={handleNavigation} className="opacity-0  group-hover:opacity-100" />
+                <Navigator side='left' onClick={() => rendition?.prev()} className="opacity-0 group-hover:opacity-100" />
+                <Navigator side='right' onClick={() => rendition?.next()} className="opacity-0  group-hover:opacity-100" />
             </div>
         </div>
     )
