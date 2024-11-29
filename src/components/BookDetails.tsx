@@ -119,7 +119,7 @@ const BookDetails: FC<Props> = ({ book }) => {
                         alreadyPurchased ? (
                             <Button
                                 as={Link}
-                                to={`/read/${slug}`}
+                                to={`/read/${slug}?title=${title}`}
                                 radius="sm"
                             >
                                 Read Book

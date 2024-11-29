@@ -30,7 +30,7 @@ const Navigator: FC<Props> = ({ side, onClick, className }) => {
                 radius="full"
                 variant="bordered"
                 isIconOnly
-                className=""
+                className="dark:border-book-dark dark:text-book-dark"
                 onClick={onClick}
             >
                 {icon}

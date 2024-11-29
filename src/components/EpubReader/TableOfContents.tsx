@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Accordion, AccordionItem } from "@nextui-org/react";
+import clsx from "clsx";
 import { FC } from "react";
 
 interface Props {
     data: BookNavList[];
+    visible?: boolean;
     onClick(href: string): void;
 };
 
@@ -18,9 +20,9 @@ export interface BookNavList {
 }
 
 
-const TableOfContents: FC<Props> = ({ data, onClick }) => {
+const TableOfContents: FC<Props> = ({ data, visible, onClick }) => {
     return (
-        <div className="w-96 bg-slate-300 h-screen overflow-y-scroll fixed top-0 right-0 flex flex-col space-x-3 z-50 p-5 shadow-md">
+        <div className={clsx(visible ? "w-96 bg-slate-300 h-screen overflow-y-scroll fixed top-0 right-0 flex flex-col space-x-3 z-50 p-5 shadow-md transition-all dark:bg-book-dark dark:text-book-dark" : "hidden")}>
             {
                 data.map(({ label, subItems }) => {
                     if (!subItems.length) {
