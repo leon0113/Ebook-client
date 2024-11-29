@@ -121,6 +121,9 @@ const EpubReader: FC<Props> = ({ url, title }) => {
     const [loading, setLoading] = useState(true);
     const [tableOfContent, setTableOfContent] = useState<BookNavList[]>([]);
     const [showToc, setShowToc] = useState(false);
+    const [setting, setSetting] = useState({
+        fontSize: 22,
+    })
 
     const handleNavigation = (href: string) => {
         rendition?.display(href)
@@ -138,6 +141,24 @@ const EpubReader: FC<Props> = ({ url, title }) => {
 
         selectTheme(rendition, mode)
     };
+
+    const handleFontSize = (mode: "increase" | "decrease") => {
+        if (!rendition) return;
+        let { fontSize } = setting;
+        if (mode === "increase") {
+            fontSize += 2
+        } else {
+            fontSize -= 2
+        }
+
+        rendition.themes.fontSize(fontSize + 'px');
+        setSetting({ ...setting, fontSize })
+    };
+
+    useEffect(() => {
+        if (!rendition) return;
+        rendition.themes.fontSize(setting.fontSize + "px")
+    }, [rendition, setting])
 
     useEffect(() => {
         if (!url) return;
@@ -178,7 +199,7 @@ const EpubReader: FC<Props> = ({ url, title }) => {
                 <div className="flex items-center justify-center">
                     <div className="flex items-center justify-center gap-2">
                         <ThemeOptions onThemeSelect={handleThemeSelection} />
-                        <FontOptions />
+                        <FontOptions onFontDecrease={() => handleFontSize("decrease")} onFontIncrease={() => handleFontSize("increase")} />
                         <Button isIconOnly variant="light">
                             <MdOutlineStickyNote2 size={30} />
                         </Button>
