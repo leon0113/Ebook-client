@@ -9,6 +9,8 @@ import { IoMenu } from "react-icons/io5";
 import ThemeOptions from "./ThemeOptions";
 import FontOptions from "./FontOptions";
 import { MdOutlineStickyNote2 } from "react-icons/md";
+import { RelocatedEvent } from "./types";
+import HighlightOption from "./HighlightOption";
 
 interface Props {
     url?: object;
@@ -113,6 +115,17 @@ const selectTheme = (rendition: Rendition, mode: "light" | "dark") => {
     }
 
     rendition.themes.select(mode)
+};
+
+export type Highlight = {
+    selection: string;
+    fill: string;
+}
+
+const applyHighlights = async (rendition: Rendition, highlights: Highlight[]) => {
+    highlights.forEach((highlight) => {
+        rendition.annotations.highlight(highlight.selection, undefined, undefined, undefined, { fill: highlight.fill })
+    })
 }
 
 
@@ -123,7 +136,14 @@ const EpubReader: FC<Props> = ({ url, title }) => {
     const [showToc, setShowToc] = useState(false);
     const [setting, setSetting] = useState({
         fontSize: 22,
-    })
+    });
+    const [page, setPage] = useState({
+        pageStart: 0,
+        pageEnd: 0,
+        totalPage: 0,
+    });
+    const [showHighlightOptions, setShowHighlightOptions] = useState(false);
+    const [selectedCfi, setSelectedCfi] = useState('');
 
     const handleNavigation = (href: string) => {
         rendition?.display(href)
@@ -152,13 +172,28 @@ const EpubReader: FC<Props> = ({ url, title }) => {
         }
 
         rendition.themes.fontSize(fontSize + 'px');
-        setSetting({ ...setting, fontSize })
+        setSetting({ ...setting, fontSize });
+        updatePageCount(rendition);
+    };
+
+    const updatePageCount = (rendition: Rendition) => {
+        const location = rendition.currentLocation() as unknown as RelocatedEvent;
+        const pageStart = location.start.displayed.page;
+        const pageEnd = location.end.displayed.page;
+        const totalPage = location.end.displayed.total;
+        setPage({ pageStart, pageEnd, totalPage })
+    };
+
+    const handleHighlightSelection = (color: string) => {
+        if (!rendition) return;
+        applyHighlights(rendition, [{ fill: color, selection: selectedCfi }]);
+        setShowHighlightOptions(false);
     };
 
     useEffect(() => {
         if (!rendition) return;
-        rendition.themes.fontSize(setting.fontSize + "px")
-    }, [rendition, setting])
+        rendition.themes.fontSize(setting.fontSize + "px");
+    }, [rendition, setting]);
 
     useEffect(() => {
         if (!url) return;
@@ -175,7 +210,26 @@ const EpubReader: FC<Props> = ({ url, title }) => {
         // hide TOC on clicking anywhere inside the book
         rendition.on("click", () => {
             hideToc();
-        })
+            setShowHighlightOptions(false);
+        });
+        // Counting book page
+        // rendition.on("displayed", () => {
+        //     console.log(rendition.currentLocation());
+        // });
+
+        rendition.on("displayed", () => {
+            updatePageCount(rendition);
+
+        });
+        rendition.on("locationChanged", () => updatePageCount(rendition));
+
+        // text selection event
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        rendition.on("selected", (cfi: string) => {
+            console.log(cfi);
+            setShowHighlightOptions(true);
+            setSelectedCfi(cfi);
+        });
 
         loadTableOfContent(book).then(setTableOfContent).finally(() => setLoading(false));
 
@@ -185,7 +239,7 @@ const EpubReader: FC<Props> = ({ url, title }) => {
             if (book)
                 book.destroy();
         }
-    }, [url])
+    }, [url]);
 
     return (
         <div className="h-screen flex flex-col group dark:bg-book-dark dark:text-book-dark">
@@ -229,6 +283,20 @@ const EpubReader: FC<Props> = ({ url, title }) => {
             {/* ex data : [{ label: { title: "", href: "" }, subItems: [{ title: "", href: "" }] }] */}
             <TableOfContents visible={showToc} data={tableOfContent} onClick={handleNavigation} />
 
+            {/* Text Highlight components  */}
+            <HighlightOption visible={showHighlightOptions} onSelect={handleHighlightSelection} />
+
+            {/* pagination  */}
+            <div className="h-10 flex justify-center items-center opacity-50">
+                <div className="flex-1 text-center">
+                    <p>Page {`${page.pageStart} - ${page.totalPage}`}</p>
+                </div>
+                {
+                    page.pageStart === page.pageEnd ? null : (<div className="flex-1 text-center">
+                        <p>Page {`${page.pageEnd} - ${page.totalPage}`}</p>
+                    </div>)
+                }
+            </div>
         </div>
     )
 }
