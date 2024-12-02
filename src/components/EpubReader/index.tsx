@@ -15,8 +15,15 @@ import HighlightOption from "./HighlightOption";
 interface Props {
     url?: object;
     title?: string;
+    highlights: Highlight[];
+    onHighlight(data: Highlight): void;
 }
 
+
+export type Highlight = {
+    selection: string;
+    fill: string;
+}
 
 
 const container = "epub_container";
@@ -117,11 +124,6 @@ const selectTheme = (rendition: Rendition, mode: "light" | "dark") => {
     rendition.themes.select(mode)
 };
 
-export type Highlight = {
-    selection: string;
-    fill: string;
-}
-
 const applyHighlights = async (rendition: Rendition, highlights: Highlight[]) => {
     highlights.forEach((highlight) => {
         rendition.annotations.highlight(highlight.selection, undefined, undefined, undefined, { fill: highlight.fill })
@@ -129,7 +131,7 @@ const applyHighlights = async (rendition: Rendition, highlights: Highlight[]) =>
 }
 
 
-const EpubReader: FC<Props> = ({ url, title }) => {
+const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
     const [rendition, setRendition] = useState<Rendition>();
     const [loading, setLoading] = useState(true);
     const [tableOfContent, setTableOfContent] = useState<BookNavList[]>([]);
@@ -186,14 +188,21 @@ const EpubReader: FC<Props> = ({ url, title }) => {
 
     const handleHighlightSelection = (color: string) => {
         if (!rendition) return;
-        applyHighlights(rendition, [{ fill: color, selection: selectedCfi }]);
+        console.log(selectedCfi);
+        const newHighlight = { fill: color, selection: selectedCfi };
+        applyHighlights(rendition, [newHighlight]);
         setShowHighlightOptions(false);
+        onHighlight(newHighlight);
     };
 
     useEffect(() => {
         if (!rendition) return;
         rendition.themes.fontSize(setting.fontSize + "px");
-    }, [rendition, setting]);
+
+        rendition.on("displayed", () => {
+            applyHighlights(rendition, highlights);
+        })
+    }, [rendition, setting, highlights]);
 
     useEffect(() => {
         if (!url) return;
