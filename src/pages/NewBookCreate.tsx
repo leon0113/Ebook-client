@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 const NewBookCreate: FC = () => {
 
     const handleSubmit = async (data: FormData) => {
-        const res = await client.post('/book/create', data);
-        toast(res.data.message);
+        await client.post('/book/create', data);
+        toast("res.data.message");
     }
 
     return (
