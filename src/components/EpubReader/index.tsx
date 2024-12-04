@@ -9,14 +9,18 @@ import { IoMenu } from "react-icons/io5";
 import ThemeOptions from "./ThemeOptions";
 import FontOptions from "./FontOptions";
 import { MdOutlineStickyNote2 } from "react-icons/md";
-import { RelocatedEvent } from "./types";
+import { LocationChangedEvent, RelocatedEvent } from "./types";
 import HighlightOption from "./HighlightOption";
+import { debounce } from "../../utils/helper";
 
 interface Props {
-    url?: object;
+    url?: string;
     title?: string;
     highlights: Highlight[];
+    lastLocation?: string
     onHighlight(data: Highlight): void;
+    onHighlightClear(cfi: string): void
+    onLocationChanged(location: string): void
 }
 
 
@@ -126,12 +130,13 @@ const selectTheme = (rendition: Rendition, mode: "light" | "dark") => {
 
 const applyHighlights = async (rendition: Rendition, highlights: Highlight[]) => {
     highlights.forEach((highlight) => {
+        rendition.annotations.remove(highlight.selection, "highlight")
         rendition.annotations.highlight(highlight.selection, undefined, undefined, undefined, { fill: highlight.fill })
     })
 }
 
 
-const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
+const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighlightClear, onLocationChanged, lastLocation }) => {
     const [rendition, setRendition] = useState<Rendition>();
     const [loading, setLoading] = useState(true);
     const [tableOfContent, setTableOfContent] = useState<BookNavList[]>([]);
@@ -188,18 +193,24 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
 
     const handleHighlightSelection = (color: string) => {
         if (!rendition) return;
-        console.log(selectedCfi);
         const newHighlight = { fill: color, selection: selectedCfi };
         applyHighlights(rendition, [newHighlight]);
         setShowHighlightOptions(false);
         onHighlight(newHighlight);
     };
 
+    const handleHighlightClear = () => {
+        if (!rendition) return;
+        rendition.annotations.remove(selectedCfi, "highlight");
+        setShowHighlightOptions(false);
+        onHighlightClear(selectedCfi)
+    }
+
     useEffect(() => {
         if (!rendition) return;
         rendition.themes.fontSize(setting.fontSize + "px");
 
-        rendition.on("displayed", () => {
+        rendition.on("locationChanged", () => {
             applyHighlights(rendition, highlights);
         })
     }, [rendition, setting, highlights]);
@@ -212,14 +223,13 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
             width,
             height,
         });
-        rendition.display();
+        rendition.display(lastLocation);
 
         rendition.themes.register("light", LightTheme)
         rendition.themes.register("dark", DarkTheme)
         // hide TOC on clicking anywhere inside the book
         rendition.on("click", () => {
             hideToc();
-            setShowHighlightOptions(false);
         });
         // Counting book page
         // rendition.on("displayed", () => {
@@ -230,14 +240,24 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
             updatePageCount(rendition);
 
         });
-        rendition.on("locationChanged", () => updatePageCount(rendition));
+        rendition.on("locationChanged", (e: LocationChangedEvent) => {
+            onLocationChanged(e.start);
+            updatePageCount(rendition);
+        });
 
+        const debounceSetShowHighlightOptions = debounce(setShowHighlightOptions, 3000)
         // text selection event
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rendition.on("selected", (cfi: string) => {
-            console.log(cfi);
             setShowHighlightOptions(true);
             setSelectedCfi(cfi);
+            debounceSetShowHighlightOptions(false);
+        });
+
+        rendition.on("markClicked", (cfi: string) => {
+            setShowHighlightOptions(true);
+            setSelectedCfi(cfi);
+            debounceSetShowHighlightOptions(false);
         });
 
         loadTableOfContent(book).then(setTableOfContent).finally(() => setLoading(false));
@@ -248,7 +268,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
             if (book)
                 book.destroy();
         }
-    }, [url]);
+    }, [url, lastLocation]);
 
     return (
         <div className="h-screen flex flex-col group dark:bg-book-dark dark:text-book-dark">
@@ -293,7 +313,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight }) => {
             <TableOfContents visible={showToc} data={tableOfContent} onClick={handleNavigation} />
 
             {/* Text Highlight components  */}
-            <HighlightOption visible={showHighlightOptions} onSelect={handleHighlightSelection} />
+            <HighlightOption visible={showHighlightOptions} onSelect={handleHighlightSelection} onClear={handleHighlightClear} />
 
             {/* pagination  */}
             <div className="h-10 flex justify-center items-center opacity-50">

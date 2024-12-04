@@ -53,3 +53,14 @@ export const formatPrice = (amount: number) => {
 
     return formatter.format(amount);
 };
+
+// Debounce function
+let timeoutId: number;
+export const debounce = <T extends unknown[]>(fn: (...args: T) => void, time: number) => {
+    return (...args: T) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            fn(...args);
+        }, time)
+    }
+}
