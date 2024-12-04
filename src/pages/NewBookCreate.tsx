@@ -7,7 +7,7 @@ const NewBookCreate: FC = () => {
 
     const handleSubmit = async (data: FormData) => {
         const res = await client.post('/book/create', data);
-        toast(`From NewBookCreate: ${res.data.message}`);
+        toast(res.data);
     }
 
     return (
