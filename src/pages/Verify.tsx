@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Spinner } from "@nextui-org/react";
 import { FC } from "react";
 import { useDispatch } from "react-redux";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { updateProfile } from "../store/slice/auth.slice";
 import Loading from "../components/common/Loading";
+import { parseError } from "../utils/helper";
 
 const Verify: FC = () => {
 
@@ -22,6 +21,7 @@ const Verify: FC = () => {
 
             return <Navigate to='/' />
         } catch (error) {
+            parseError(error)
             return <Navigate to='/not-found' />
         }
     }
