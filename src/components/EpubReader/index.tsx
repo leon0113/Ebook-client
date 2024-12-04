@@ -262,6 +262,11 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
             debounceSetShowHighlightOptions(false);
         });
 
+        // Listen if resize is finished
+        rendition.on("resized", () => {
+            setLoading(false);
+        });
+
         loadTableOfContent(book).then(setTableOfContent).finally(() => setLoading(false));
 
         setRendition(rendition);
@@ -271,6 +276,22 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
                 book.destroy();
         }
     }, [url, lastLocation]);
+
+    useEffect(() => {
+        if (!rendition) return;
+        const handleResize = () => {
+            setLoading(true);
+
+            const { width, height } = getElementSize(wrapper);
+            rendition.resize(width, height)
+        }
+
+        window.addEventListener("resize", () => handleFontSize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        }
+    }, [rendition])
 
     return (
         <div className="h-screen flex flex-col group dark:bg-book-dark dark:text-book-dark">
@@ -285,9 +306,9 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
                     <div className="flex items-center justify-center gap-2">
                         <ThemeOptions onThemeSelect={handleThemeSelection} />
                         <FontOptions onFontDecrease={() => handleFontSize("decrease")} onFontIncrease={() => handleFontSize("increase")} />
-                        <Button isIconOnly variant="light" onClick={() => setShowNotes(true)}>
+                        {/* <Button isIconOnly variant="light" onClick={() => setShowNotes(true)}>
                             <MdOutlineStickyNote2 size={30} />
-                        </Button>
+                        </Button> */}
 
                         <Button onClick={toggleToc} variant="light" isIconOnly>
                             <IoMenu size={30} />

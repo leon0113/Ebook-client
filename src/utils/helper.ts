@@ -55,8 +55,8 @@ export const formatPrice = (amount: number) => {
 };
 
 // Debounce function
-let timeoutId: number;
 export const debounce = <T extends unknown[]>(fn: (...args: T) => void, time: number) => {
+    let timeoutId: number;
     return (...args: T) => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
