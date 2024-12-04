@@ -135,7 +135,7 @@ const CartProvider: FC<Props> = ({ children }) => {
         };
 
         fetchCartInfo();
-    }, []);
+    }, [dispatch, profile]);
 
 
     useEffect(() => {

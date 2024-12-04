@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC, useEffect, useState } from "react";
 import { Book, Rendition } from 'epubjs'
 import Navigator from "./Navigator";
@@ -8,7 +7,6 @@ import { Button } from "@nextui-org/react";
 import { IoMenu } from "react-icons/io5";
 import ThemeOptions from "./ThemeOptions";
 import FontOptions from "./FontOptions";
-import { MdOutlineStickyNote2 } from "react-icons/md";
 import { LocationChangedEvent, RelocatedEvent } from "./types";
 import HighlightOption from "./HighlightOption";
 import { debounce } from "../../utils/helper";
@@ -249,7 +247,6 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
 
         const debounceSetShowHighlightOptions = debounce(setShowHighlightOptions, 3000)
         // text selection event
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rendition.on("selected", (cfi: string) => {
             setShowHighlightOptions(true);
             setSelectedCfi(cfi);
@@ -275,7 +272,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
             if (book)
                 book.destroy();
         }
-    }, [url, lastLocation]);
+    }, [url, lastLocation, onLocationChanged]);
 
     useEffect(() => {
         if (!rendition) return;
@@ -291,7 +288,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
         return () => {
             window.removeEventListener("resize", handleResize);
         }
-    }, [rendition])
+    }, [rendition, handleFontSize])
 
     return (
         <div className="h-screen flex flex-col group dark:bg-book-dark dark:text-book-dark">

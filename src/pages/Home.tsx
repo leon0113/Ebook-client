@@ -9,6 +9,7 @@ export default function Home() {
             <BookByGenre genre="Fantasy" />
             <BookByGenre genre="Thriller" />
             <BookByGenre genre="Fiction" />
+            <BookByGenre genre="Romance" />
 
             <p className="mt-10 text-center">See More.....</p>
         </div>

@@ -127,7 +127,7 @@ const AuthorForm: FC<Props> = ({ btnTitle, onSubmit, initialState }) => {
             setAbout(initialState.about)
             updateInitialSocialLinks();
         }
-    }, [initialState]);
+    }, [initialState, updateInitialSocialLinks]);
 
     return (
         <div className="p-4 space-y-6">

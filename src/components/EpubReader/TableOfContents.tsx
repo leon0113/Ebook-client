@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import clsx from "clsx";
 import { FC } from "react";
