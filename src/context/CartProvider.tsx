@@ -5,6 +5,7 @@ import client from "../api/client";
 import useAuth from "../hooks/useAuth";
 import { CartItem, getCartState, updateCartId, updateCartItem, updateCartState } from "../store/slice/cart.slice";
 import { parseError } from "../utils/helper";
+import { AxiosError } from "axios";
 
 interface Props {
     children: ReactNode;
@@ -128,7 +129,10 @@ const CartProvider: FC<Props> = ({ children }) => {
                 const { data } = await client.get<ICartInfo>('/cart');
                 dispatch(updateCartState({ id: data.cart.id, items: data.cart.items }))
             } catch (error) {
-                parseError(error)
+                if (error instanceof AxiosError) {
+                    if (error.response?.status === 404) return;
+                    parseError(error);
+                }
             } finally {
                 setFetching(false);
             }
