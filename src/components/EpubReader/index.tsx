@@ -12,6 +12,7 @@ import { MdOutlineStickyNote2 } from "react-icons/md";
 import { LocationChangedEvent, RelocatedEvent } from "./types";
 import HighlightOption from "./HighlightOption";
 import { debounce } from "../../utils/helper";
+import NotesModal from "./NotesModal";
 
 interface Props {
     url?: string;
@@ -151,6 +152,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
     });
     const [showHighlightOptions, setShowHighlightOptions] = useState(false);
     const [selectedCfi, setSelectedCfi] = useState('');
+    const [showNotes, setShowNotes] = useState(false);
 
     const handleNavigation = (href: string) => {
         rendition?.display(href)
@@ -283,7 +285,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
                     <div className="flex items-center justify-center gap-2">
                         <ThemeOptions onThemeSelect={handleThemeSelection} />
                         <FontOptions onFontDecrease={() => handleFontSize("decrease")} onFontIncrease={() => handleFontSize("increase")} />
-                        <Button isIconOnly variant="light">
+                        <Button isIconOnly variant="light" onClick={() => setShowNotes(true)}>
                             <MdOutlineStickyNote2 size={30} />
                         </Button>
 
@@ -312,10 +314,22 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
             {/* ex data : [{ label: { title: "", href: "" }, subItems: [{ title: "", href: "" }] }] */}
             <TableOfContents visible={showToc} data={tableOfContent} onClick={handleNavigation} />
 
-            {/* Text Highlight components  */}
-            <HighlightOption visible={showHighlightOptions} onSelect={handleHighlightSelection} onClear={handleHighlightClear} />
+            {/* //!Text Highlight components  */}
+            <HighlightOption
+                visible={showHighlightOptions}
+                onSelect={handleHighlightSelection}
+                onClear={handleHighlightClear}
+            />
 
-            {/* pagination  */}
+            {/* //!Notes modal components  */}
+            <NotesModal
+                book={rendition?.book}
+                notes={highlights.map(({ selection }) => selection)}
+                isOpen={showNotes}
+                onClose={() => setShowNotes(false)}
+            />
+
+            {/* //!pagination  */}
             <div className="h-10 flex justify-center items-center opacity-50">
                 <div className="flex-1 text-center">
                     <p>Page {`${page.pageStart} - ${page.totalPage}`}</p>
