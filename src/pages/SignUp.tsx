@@ -3,6 +3,7 @@ import { FC, FormEventHandler, useState } from "react";
 import { RiMailCheckLine } from "react-icons/ri";
 import client from "../api/client";
 import { parseError } from "../utils/helper";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const emailRegex = new RegExp("^[a-zA-Z0-9._%+-]+@gmail.com$");
 
@@ -12,6 +13,8 @@ const SignUp: FC = () => {
     const [invalidForm, setInvalidForm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showSuccessResponse, setShowSuccessResponse] = useState(false);
+    const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+
 
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -20,11 +23,20 @@ const SignUp: FC = () => {
         if (!emailRegex.test(email)) {
             return setInvalidForm(true)
         }
+
+        if (!recaptchaToken) {
+            alert("Please complete the reCAPTCHA");
+            return;
+        }
+
         setInvalidForm(false);
         setLoading(true);
         try {
+
+
             await client.post('/auth/generate-link', {
-                email
+                email,
+                recaptchaToken,
             });
             setShowSuccessResponse(true);
         } catch (error) {
@@ -63,6 +75,15 @@ const SignUp: FC = () => {
                         isInvalid={invalidForm}
                         errorMessage='Invalid email address'
                     />
+
+                    <div className="flex justify-center items-center">
+                        <ReCAPTCHA
+                            sitekey="6Lf2TpMqAAAAAHZNUCDMgfFJvh8JsS7lAzbLuKw_"
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            onChange={(token: any) => setRecaptchaToken(token)}
+                            onExpired={() => setRecaptchaToken(null)}
+                        />
+                    </div>
 
                     <Button isLoading={loading} type="submit" className="w-full">
                         Send the link!

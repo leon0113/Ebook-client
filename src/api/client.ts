@@ -1,7 +1,7 @@
 import axios from "axios";
-
+// https://ebook-server-livid.vercel.app
 const client = axios.create({
-    baseURL: "https://ebook-server-livid.vercel.app",
+    baseURL: "http://localhost:8001",
 });
 
 client.interceptors.request.use(function (config) {
