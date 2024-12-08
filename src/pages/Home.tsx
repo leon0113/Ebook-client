@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import BookByGenre from "../components/BookByGenre"
 import Hero from "../components/Hero"
 
@@ -9,9 +10,8 @@ export default function Home() {
             <BookByGenre genre="Fantasy" />
             <BookByGenre genre="Thriller" />
             <BookByGenre genre="Fiction" />
-            <BookByGenre genre="Romance" />
 
-            <p className="mt-10 text-center">See More.....</p>
+            <Link to='/books' className="text-xl font-semibold flex justify-center underline text-yellow-500 hover:text-yellow-600">See all book collection</Link>
         </div>
     )
 }

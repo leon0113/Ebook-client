@@ -7,38 +7,38 @@ import Slider from 'react-slick';
 const books = [
     {
         title: "The Enchanted Forest",
-        slogan: "Discover the magic within.",
+        slogan: "Discover the magic within. Explore",
         subtitle: "A journey through mystery and wonder.",
-        cover: "https://m.media-amazon.com/images/I/91xYwvjIrIL._AC_UF1000,1000_QL80_.jpg",
-        slug: ""
+        cover: "https://marketplace.canva.com/EAFaQMYuZbo/1/0/1003w/canva-brown-rusty-mystery-novel-book-cover-hG1QhA7BiBU.jpg",
+
     },
     {
         title: "The Startup Hustle",
-        slogan: "Grind. Build. Succeed.",
+        slogan: "Grind. Build. Succeed. Happiness inside.",
         subtitle: "Lessons from the entrepreneurial trenches.",
-        cover: "https://m.media-amazon.com/images/I/91xYwvjIrIL._AC_UF1000,1000_QL80_.jpg",
-        slug: ""
+        cover: "https://i.pinimg.com/736x/a1/f8/87/a1f88733921c820db477d054fe96afbb.jpg",
+
     },
     {
         title: "Galactic Voyagers",
-        slogan: "To infinity and beyond.",
+        slogan: "To infinity and beyond. Face the Fear",
         subtitle: "Exploring the farthest reaches of space.",
-        cover: "https://m.media-amazon.com/images/I/91xYwvjIrIL._AC_UF1000,1000_QL80_.jpg",
-        slug: ""
+        cover: "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/art-book-cover-design-template-34323b0f0734dccded21e0e3bebf004c_screen.jpg?ts=1637015198",
+
     },
     {
         title: "Cooking with Passion",
         slogan: "Flavor beyond boundaries.",
         subtitle: "A culinary adventure like no other.",
-        cover: "https://m.media-amazon.com/images/I/91xYwvjIrIL._AC_UF1000,1000_QL80_.jpg",
-        slug: ""
+        cover: "https://skyryedesign.com/wp-content/uploads/2016/04/56c6f9b7efad5-cover-books-design-illustrations.jpg",
+
     },
     {
         title: "The Art of Mindfulness",
-        slogan: "Find your inner peace.",
+        slogan: "Find your inner peace. Flavor beyond",
         subtitle: "Simple practices for a better life.",
-        cover: "https://m.media-amazon.com/images/I/91xYwvjIrIL._AC_UF1000,1000_QL80_.jpg",
-        slug: ""
+        cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ6I3qh_LXrv3cekXyKNfj2co8QR98K0brUA&s",
+
     }
 ];
 
@@ -47,14 +47,14 @@ const Hero: FC = () => {
     return (
         <div className="overflow-hidden rounded-md p-5 bg-[#eeebe7] dark:bg-[#585858]">
             <Slider
-                dots
+                // dots
                 infinite
                 autoplay
-                speed={1000}
+                speed={2000}
                 fade
                 slidesToShow={1}
                 slidesToScroll={1}
-                autoplaySpeed={3000}
+                autoplaySpeed={4000}
             >
                 {
                     books.map((book) => {
@@ -75,14 +75,14 @@ const Hero: FC = () => {
 
                                             endContent={<FaArrowRightLong />}
                                             as={Link}
-                                            to={`/books/${book.slug}`}
+                                            to={`/books`}
                                         >
-                                            Learn More
+                                            Explore More
                                         </Button>
                                     </div>
                                 </div>
                                 <div className="flex-1 flex justify-center items-center p-5">
-                                    <img src={book.cover} alt={book.title} className="md:w-48 w-32 rounded-md object-cover shadow-lg rotate-12" />
+                                    <img src={book.cover} alt={book.title} className="md:w-48 w-32 h-60 md:h-80 rounded-md object-cover shadow-lg rotate-12" />
                                 </div>
                             </div>
                         </div>

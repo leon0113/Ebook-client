@@ -1,7 +1,7 @@
 import { Chip } from "@nextui-org/react";
 import { FC } from "react";
 import { FaStar } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { calDiscount, formatPrice } from "../utils/helper";
 import GenreTitle from "./common/GenreTitle";
 import { IRecommendedBooks } from "./Recommended";
@@ -11,24 +11,9 @@ interface Props {
     title: string;
 }
 
-// interface IBookByGenre {
-//     id: string;
-//     title: string;
-//     cover?: string;
-//     slug: string;
-//     genre: string;
-//     rating?: string;
-//     language: string;
-//     price: {
-//         mrp: string;
-//         sale: string;
-//     };
-// }
-
 const RecommendedBooks: FC<Props> = ({ title, data }) => {
 
-
-
+    const { pathname } = useLocation();
 
     return (
         <div>
@@ -43,8 +28,11 @@ const RecommendedBooks: FC<Props> = ({ title, data }) => {
                                         className="w-32 h-[185px] object-contain rounded border"
                                     />
 
-                                    <div className="w-full space-y-2">
-                                        <p className="font-bold line-clamp-2">{book.title}</p>
+                                    <div className="w-full space-y-2 mb-2">
+                                        <p className="font-bold line-clamp-1" title={book.title}>{book.title}</p>
+                                        {
+                                            pathname.includes('/author') && <p className="text-sm text-slate-600">Genre: <span className="text-slate-900 font-semibold">{book.genre}</span></p>
+                                        }
                                         <Chip radius="sm" size="sm" color="danger">{calDiscount(book.price)}% Off</Chip>
                                     </div>
 

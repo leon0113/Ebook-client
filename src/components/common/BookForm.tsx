@@ -1,8 +1,7 @@
 import { parseDate } from "@internationalized/date";
-import { Autocomplete, AutocompleteItem, Button, DatePicker, Input } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, Button, DatePicker, Input, Radio, RadioGroup } from "@nextui-org/react";
 import clsx from "clsx";
 import { ChangeEventHandler, FC, FormEventHandler, useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { z } from "zod";
 import { genreList, genres, languageList, languages } from "../../utils/data";
 import { parseError } from "../../utils/helper";
@@ -22,13 +21,14 @@ export interface InitialBookToUpdate {
     price: { mrp: string; sale: string };
     publicationName: string;
     publishedAt: string;
+    status: string
 }
 
 interface Props {
     title: string;
     submitBtnTitle: string;
     initialState?: InitialBookToUpdate;
-    onSubmit(formData: FormData): Promise<void>
+    onSubmit(formData: FormData, file?: File | null): Promise<void>
 }
 
 interface DefaultForm {
@@ -42,6 +42,7 @@ interface DefaultForm {
     language: string;
     mrp: string;
     sale: string;
+    status: string,
 }
 
 const defaultBookInfo = {
@@ -52,6 +53,7 @@ const defaultBookInfo = {
     mrp: "",
     publicationName: "",
     sale: "",
+    status: "publish"
 };
 
 interface ICreateBook {
@@ -61,6 +63,7 @@ interface ICreateBook {
     publishedAt?: string;
     publicationName: string;
     genre: string;
+    status: string;
     price: {
         mrp: number;
         sale: number;
@@ -80,6 +83,7 @@ interface IUpdateBook {
     publicationName: string;
     genre: string;
     slug: string,
+    status: string;
     price: {
         mrp: number;
         sale: number;
@@ -210,6 +214,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 language: bookInfo.language,
                 publicationName: bookInfo.publicationName,
                 publishedAt: bookInfo.publishedAt,
+                status: bookInfo.status,
                 price: {
                     mrp: Number(bookInfo.mrp),
                     sale: Number(bookInfo.sale),
@@ -239,11 +244,10 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 }
             }
 
-            await onSubmit(formData);
-            toast('Book uploaded successfully', { duration: 3000 })
+            await onSubmit(formData, file);
             setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
             setCover('');
-            navigate('/')
+            navigate('/profile')
         } catch (error) {
             parseError(error);
         } finally {
@@ -265,6 +269,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 publishedAt,
                 price,
                 cover,
+                status
             } = initialState;
 
             setBookInfo({
@@ -276,6 +281,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 publishedAt,
                 mrp: price.mrp,
                 sale: price.sale,
+                status
             });
 
             if (cover) setCover(cover);
@@ -318,6 +324,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 language: bookInfo.language,
                 publicationName: bookInfo.publicationName,
                 publishedAt: bookInfo.publishedAt,
+                status: bookInfo.status,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                 slug: initialState?.slug!,
                 price: {
@@ -352,9 +359,11 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                 }
             }
 
-            await onSubmit(formData);
-            setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
-            setCover('');
+
+            await onSubmit(formData, file);
+
+            // setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
+            // setCover('');
             navigate('/');
         } catch (error) {
             parseError(error);
@@ -486,6 +495,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                     );
                 })}
             </Autocomplete>
+
             <div>
                 <div className="bg-default-100 rounded-md py-2 px-3">
                     <p className={clsx("text-xs pl-3", errors?.price && "text-red-400")}>
@@ -529,6 +539,18 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
                     <ErrorList errors={errors?.price} />
                 </div>
             </div>
+
+
+            <RadioGroup
+                label="Select Book Status"
+                value={bookInfo.status}
+                onValueChange={(value) => setBookInfo({ ...bookInfo, status: value })}
+                orientation="horizontal"
+            >
+                <Radio value="publish">Publish</Radio>
+                <Radio value="unpublish">Un Publish</Radio>
+            </RadioGroup>
+
             <Button isLoading={busy} type="submit" className="w-full">{submitBtnTitle}</Button>
         </form>
     );

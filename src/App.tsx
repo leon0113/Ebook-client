@@ -26,6 +26,8 @@ import Guest from './routes/Guest'
 import Private from './routes/Private'
 import MyLibrary from './pages/MyLibrary'
 import ReadingBook from './pages/ReadingBook'
+import Search from './pages/Search'
+import AllBooks from './pages/AllBooks'
 
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
         <Route path='/not-found' element={<NotFound />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/author/:id' element={<AuthorPage />} />
+        <Route path='/search' element={<Search />} />
+        <Route path='/books' element={<AllBooks />} />
 
         <Route element={<Private />}>
           <Route path='/new-user' element={<NewUser />} />

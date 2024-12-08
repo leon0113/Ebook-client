@@ -41,7 +41,7 @@ const NewUserForm: FC<INewUserForm> = ({ name, avatar, onSubmit, title, btnTitle
 
         const formData = new FormData();
 
-        if (userInfo.name.trim().length < 3) {
+        if (userInfo.name.trim().length < 3 || userInfo.name.trim().length >= 20) {
             return setInvalidForm(true);
         } else {
             setInvalidForm(false)
@@ -97,7 +97,7 @@ const NewUserForm: FC<INewUserForm> = ({ name, avatar, onSubmit, title, btnTitle
                         value={userInfo.name || name}
                         onChange={handleChange}
                         isInvalid={invalidForm}
-                        errorMessage='Name must be 3 character long'
+                        errorMessage='Name must be 3 characters long & less then 20 characters short'
                     />
                     <Button isLoading={loading} type='submit' className="w-full">{btnTitle}</Button>
                 </form>

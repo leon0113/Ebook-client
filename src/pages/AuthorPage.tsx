@@ -1,4 +1,4 @@
-import { Link, User } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import client from "../api/client";
@@ -50,14 +50,18 @@ const AuthorPage: FC = () => {
             </div>
         );
 
+
+
     return (
-        <div className="p-5 lg:p-0">
-            <User name={<p className="text-2xl font-semibold">{authorInfo?.name}</p>}
-                avatarProps={{
-                    src: `${authorInfo?.avatar}`
-                }}
-                className="text-2xl"
-            />
+        <div className="p-5 lg:p-0 mt-10">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-5">
+                <img src={authorInfo?.avatar} alt="Author picture" className="w-32 h-32 rounded-full" />
+                <h1 className="font-bold text-2xl italic">{authorInfo?.name}</h1>
+            </div>
+
+            <div className="pl-10 mt-10">
+                <RichEditor value={authorInfo?.about} className="regular" />
+            </div>
 
             <div className="py-6 pl-10">
                 <h1 className="font-semibold text-lg">Social Links:</h1>
@@ -80,12 +84,8 @@ const AuthorPage: FC = () => {
                 </div>
             </div>
 
-            <div className="pl-10 mt-3">
-                <RichEditor value={authorInfo?.about} className="regular" />
-            </div>
-
             <div className="mt-6">
-                <RecommendedBooks data={authorInfo?.books || []} title="Related Books" />
+                <RecommendedBooks data={authorInfo?.books || []} title={`Books by ${authorInfo?.name} `} />
             </div>
         </div>
     );

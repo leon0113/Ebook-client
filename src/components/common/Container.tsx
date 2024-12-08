@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Navbar from "./Navbar";
 import { useLocation } from "react-router-dom";
+import Footer from "../Footer";
 
 interface Props {
     children: React.ReactNode;
@@ -19,6 +20,8 @@ const Container: FC<Props> = ({ children }) => {
             <div className="flex-1  flex flex-col">
                 {children}
             </div>
+
+            <Footer />
         </div>
     )
 }

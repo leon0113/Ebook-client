@@ -1,5 +1,5 @@
 import { Button, Input } from "@nextui-org/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { MdDeleteOutline, MdOutlineAdd } from "react-icons/md";
 import { z } from "zod";
 import useAuth from "../../hooks/useAuth";
@@ -77,7 +77,7 @@ const AuthorForm: FC<Props> = ({ btnTitle, onSubmit, initialState }) => {
         );
     };
 
-    const updateInitialSocialLinks = () => {
+    const updateInitialSocialLinks = useCallback(() => {
         if (initialState) {
             const formattedLinks = initialState.socialLinks.map((link) => ({
                 id: Number(link.id),
@@ -85,7 +85,7 @@ const AuthorForm: FC<Props> = ({ btnTitle, onSubmit, initialState }) => {
             }));
             setSocialLinks(formattedLinks);
         }
-    };
+    }, [initialState]);
 
 
 

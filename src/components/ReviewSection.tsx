@@ -58,8 +58,8 @@ const ReviewSection: FC<Props> = ({ id, title, reviews }) => {
                                     src: review.userId.avatar?.url,
                                 }}
                                 description={
-                                    <div className="flex items-center space-x-1">
-                                        <span className="text-black font-semibold">{review.rating}</span>
+                                    <div className="flex items-center space-x-1 text-medium">
+                                        <span className="text-black dark:text-white font-semibold">{review.rating}</span>
                                         <FaStar className="text-yellow-500" />
                                     </div>
                                 }

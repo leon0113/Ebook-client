@@ -77,9 +77,8 @@ const ReadingBook: FC = () => {
         const fetchBookUrl = async () => {
             try {
                 const { data } = await client.get<IBookURL>(`/book/read/${slug}`);
-                const res = await client.get(data.url, { responseType: 'blob' });
-                console.log(res);
-                setUrl(res.data);
+                // const res = await client.get(data.url, { responseType: 'blob' });
+                setUrl(data.url);
                 setSettings(data.settings);
             } catch (error) {
                 parseError(error)

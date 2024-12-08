@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { Book, Rendition } from 'epubjs'
 import Navigator from "./Navigator";
 import LoadingIndicator from "./LoadingIndicator";
@@ -10,7 +10,7 @@ import FontOptions from "./FontOptions";
 import { LocationChangedEvent, RelocatedEvent } from "./types";
 import HighlightOption from "./HighlightOption";
 import { debounce } from "../../utils/helper";
-import NotesModal from "./NotesModal";
+// import NotesModal from "./NotesModal";
 
 interface Props {
     url?: string;
@@ -150,7 +150,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
     });
     const [showHighlightOptions, setShowHighlightOptions] = useState(false);
     const [selectedCfi, setSelectedCfi] = useState('');
-    const [showNotes, setShowNotes] = useState(false);
+    // const [showNotes, setShowNotes] = useState(false);
 
     const handleNavigation = (href: string) => {
         rendition?.display(href)
@@ -169,7 +169,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
         selectTheme(rendition, mode)
     };
 
-    const handleFontSize = (mode: "increase" | "decrease") => {
+    const handleFontSize = useCallback((mode: "increase" | "decrease") => {
         if (!rendition) return;
         let { fontSize } = setting;
         if (mode === "increase") {
@@ -181,7 +181,7 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
         rendition.themes.fontSize(fontSize + 'px');
         setSetting({ ...setting, fontSize });
         updatePageCount(rendition);
-    };
+    }, [rendition, setting]);
 
     const updatePageCount = (rendition: Rendition) => {
         const location = rendition.currentLocation() as unknown as RelocatedEvent;
@@ -231,10 +231,6 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
         rendition.on("click", () => {
             hideToc();
         });
-        // Counting book page
-        // rendition.on("displayed", () => {
-        //     console.log(rendition.currentLocation());
-        // });
 
         rendition.on("displayed", () => {
             updatePageCount(rendition);
@@ -340,12 +336,12 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
             />
 
             {/* //!Notes modal components  */}
-            <NotesModal
+            {/* <NotesModal
                 book={rendition?.book}
                 notes={highlights.map(({ selection }) => selection)}
                 isOpen={showNotes}
                 onClose={() => setShowNotes(false)}
-            />
+            /> */}
 
             {/* //!pagination  */}
             <div className="h-10 flex justify-center items-center opacity-50">

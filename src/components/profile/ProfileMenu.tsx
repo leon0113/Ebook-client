@@ -41,7 +41,7 @@ const ProfileMenu: FC<Props> = ({ profile, signOut }) => {
                             isBordered: false,
                             src: avatar,
                         }}
-                        className="transition-transform"
+                        className="transition-transform font-semibold"
                         name={name}
                     />
                 </DropdownTrigger>
@@ -67,7 +67,9 @@ const ProfileMenu: FC<Props> = ({ profile, signOut }) => {
 
                     {role === "author" ? (
                         <DropdownSection showDivider>
-                            <DropdownItem key="analytics">Analytics</DropdownItem>
+                            <DropdownItem textValue="author" key="author" className="p-0">
+                                <DropdownLink title="Author Profile" to={`/author/${profile?.authorId}`} />
+                            </DropdownItem>
                             <DropdownItem
                                 textValue="Create New Book"
                                 key="create_new_book"

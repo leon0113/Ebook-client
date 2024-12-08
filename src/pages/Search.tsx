@@ -1,41 +1,36 @@
-import { Chip } from "@nextui-org/react";
 import { FC, useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import client from "../api/client";
+import { Chip } from "@nextui-org/react";
 import { calDiscount, formatPrice, parseError } from "../utils/helper";
-import GenreTitle from "./common/GenreTitle";
-import SkeBookList from "./skeletons/SkeBookList";
+import { FaStar } from "react-icons/fa";
+import Loading from "../components/common/Loading";
 
-interface Props {
-    genre: string
-}
-
-interface IBookByGenre {
+export interface IBookBySearch {
     id: string;
     title: string;
     cover?: string;
     slug: string;
     genre: string;
     rating?: string;
-    language: string;
     price: {
         mrp: string;
         sale: string;
     };
 }
 
-const BookByGenre: FC<Props> = ({ genre }) => {
+const Search: FC = () => {
+    const [searchParam] = useSearchParams();
+    const title = searchParam.get('title');
 
-    const [books, setBooks] = useState<IBookByGenre[]>([]);
+    const [results, setResults] = useState<IBookBySearch[]>([]);
     const [loading, setLoading] = useState(true);
 
-
     useEffect(() => {
-        const fetchBookByGenre = async (genre: string) => {
+        const fetchSearchBooks = async () => {
             try {
-                const { data } = await client.get(`/book/by-genre/${genre}`);
-                setBooks(data.books);
+                const { data } = await client.get(`/search/books?title=${title}`);
+                setResults(data.results);
             } catch (error) {
                 parseError(error)
             } finally {
@@ -43,32 +38,34 @@ const BookByGenre: FC<Props> = ({ genre }) => {
             }
         }
 
-        fetchBookByGenre(genre);
-    }, [genre]);
+        fetchSearchBooks();
+    }, [title]);
 
-    if (loading) {
-        return <SkeBookList />
-    }
+    if (loading) return <Loading />
 
     return (
-        <div>
-            <GenreTitle title={genre} />
+        <div className="flex flex-col space-y-10 mt-10 p-5">
+            <h1 className="text-2xl text-slate-700">Search Results For: <span className="text-3xl text-slate-800 font-semibold">{title}</span></h1>
+            {
+                !results.length && <h1 className="text-2xl text-slate-600 text-center">Sorry, No books found 😪</h1>
+            }
             <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-5">
                 {
-                    books.map((book) => {
+                    results.map((book) => {
                         return (
-                            <Link key={book.id} to={`/book/${book.slug}`} >
-                                <div className="flex flex-col items-center space-y-2">
+                            <Link key={book.id} to={`/book/${book.slug}`} className="mb-5">
+                                <div className="flex flex-col items-center">
                                     <img src={book.cover} alt={book.title}
-                                        className="w-32 h-[185px] object-contain rounded border"
+                                        className="w-32 h-[185px] object-contain rounded"
                                     />
 
-                                    <div className="w-full space-y-2">
+
+                                    <div className="w-full space-y-2 mb-2">
                                         <p className="font-bold line-clamp-1" title={book.title}>{book.title}</p>
                                         <Chip radius="sm" size="sm" color="danger">{calDiscount(book.price)}% Off</Chip>
                                     </div>
 
-                                    <div className="w-full">
+                                    <div className="w-full mb-2">
                                         <div className="flex space-x-2">
                                             <p className="font-semibold">{formatPrice(Number(book.price.sale))}</p>
                                             <p className="font-base line-through">{formatPrice(Number(book.price.mrp))}</p>
@@ -92,10 +89,9 @@ const BookByGenre: FC<Props> = ({ genre }) => {
                     })
                 }
             </div>
-
-            <Link to={`/books?genre=${genre}`} className="mt-5 flex justify-center font-semibold text-yellow-500 hover:underline">See More.....</Link>
         </div>
     )
-}
+};
 
-export default BookByGenre;
+
+export default Search;
