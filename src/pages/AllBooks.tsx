@@ -108,7 +108,7 @@ const AllBooks: FC = () => {
 
                                     <div className="w-full space-y-2 mb-2">
                                         <p className="font-bold line-clamp-1" title={book.title}>{book.title}</p>
-                                        <p className="text-sm text-slate-600">Genre: <span className="text-slate-900 font-semibold">{book.genre}</span></p>
+                                        <p className="text-sm text-slate-600 dark:text-slate-50">Genre: <span className="text-slate-900 dark:text-slate-100 font-semibold">{book.genre}</span></p>
                                         <Chip radius="sm" size="sm" color="danger">{calDiscount(book.price)}% Off</Chip>
                                     </div>
 
