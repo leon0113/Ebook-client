@@ -67,9 +67,9 @@ const AllBooks: FC = () => {
             <div className="flex flex-col md:flex-row justify-between items-center space-y-5">
                 {
                     filterKey || genre ? (
-                        <h1 className="text-2xl text-slate-700">{genre || filterKey} Collection:</h1>
+                        <h1 className="text-2xl text-slate-700 dark:text-slate-100">{genre || filterKey} Collection:</h1>
                     ) : (
-                        <h1 className="text-2xl text-slate-700">All Books in Collection:</h1>
+                        <h1 className="text-2xl text-slate-700 dark:text-slate-100">All Books in Collection:</h1>
                     )
                 }
                 <div className="w-full md:w-60 flex justify-center">
@@ -92,7 +92,7 @@ const AllBooks: FC = () => {
                 </div>
             </div>
             {
-                !filteredBooks.length && <h1 className="text-2xl w-full flex justify-center text-slate-700 text-center">No Books Found😥</h1>
+                !filteredBooks.length && <h1 className="text-2xl w-full flex justify-center text-slate-700 dark:text-slate-100 text-center">No Books Found😥</h1>
             }
             {/* book list section  */}
             <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-5">
