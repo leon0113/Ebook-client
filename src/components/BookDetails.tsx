@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { FaEarthAfrica, FaRegCalendarDays, FaRegFileLines, FaStar } from "react-icons/fa6";
 import { PiFilmReelBold } from "react-icons/pi";
 import { TbShoppingCartPlus } from "react-icons/tb";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { IBookDetails } from "../pages/BookPage";
 import { calDiscount, formatPrice, parseError } from "../utils/helper";
 import RichEditor from "./rich-editor";
@@ -31,6 +31,7 @@ const BookDetails: FC<Props> = ({ book }) => {
     };
 
     const handleInstantCheckout = async () => {
+        if (!profile) return <Navigate to={'/sign-up'} />
         try {
             setPending(true);
             const { data } = await client.post("/checkout/instant", { productId: id })
