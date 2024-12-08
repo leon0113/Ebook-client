@@ -55,7 +55,7 @@ const AuthorPage: FC = () => {
     return (
         <div className="p-5 lg:p-0 mt-10">
             <div className="flex flex-col md:flex-row justify-center items-center gap-5">
-                <img src={authorInfo?.avatar} alt="Author picture" className="w-32 h-32 rounded-full" />
+                <img src={authorInfo?.avatar} alt="Author picture" className="w-32 h-32 rounded-full object-cover" />
                 <h1 className="font-bold text-2xl italic">{authorInfo?.name}</h1>
             </div>
 
