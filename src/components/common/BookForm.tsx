@@ -540,7 +540,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             </div>
 
 
-            <RadioGroup
+            {/* <RadioGroup
                 label="Select Book Status"
                 value={bookInfo.status}
                 onValueChange={(value) => setBookInfo({ ...bookInfo, status: value })}
@@ -548,7 +548,7 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             >
                 <Radio value="publish">Publish</Radio>
                 <Radio value="unpublish">Un Publish</Radio>
-            </RadioGroup>
+            </RadioGroup> */}
 
             <Button isLoading={busy} type="submit" className="w-full">{submitBtnTitle}</Button>
         </form>
