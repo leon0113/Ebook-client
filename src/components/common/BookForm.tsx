@@ -247,8 +247,8 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
             await onSubmit(formData, file);
             setBookInfo({ ...defaultBookInfo, description: '', language: '', genre: '', file: null });
             setCover('');
-            navigate('/profile')
             window.location.reload();
+            navigate('/profile')
         } catch (error) {
             parseError(error);
         } finally {
@@ -362,8 +362,8 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
 
 
             await onSubmit(formData, file);
-            navigate('/');
             window.location.reload();
+            navigate('/');
         } catch (error) {
             parseError(error);
         } finally {
