@@ -1,17 +1,17 @@
 import { Button, Chip, Divider } from "@nextui-org/react";
 import { FC, useState } from "react";
+import toast from "react-hot-toast";
 import { FaEarthAfrica, FaRegCalendarDays, FaRegFileLines, FaStar } from "react-icons/fa6";
+import { GoFileDirectoryFill } from "react-icons/go";
 import { PiFilmReelBold } from "react-icons/pi";
 import { TbShoppingCartPlus } from "react-icons/tb";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import client from "../api/client";
+import useAuth from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
 import { IBookDetails } from "../pages/BookPage";
 import { calDiscount, formatPrice, parseError } from "../utils/helper";
 import RichEditor from "./rich-editor";
-import { GoFileDirectoryFill } from "react-icons/go";
-import useCart from "../hooks/useCart";
-import client from "../api/client";
-import useAuth from "../hooks/useAuth";
-import toast from "react-hot-toast";
 
 interface Props {
     book?: IBookDetails
@@ -22,6 +22,7 @@ const BookDetails: FC<Props> = ({ book }) => {
     const { updateCart, loading } = useCart();
     const { profile } = useAuth();
     const [pending, setPending] = useState(false);
+    const navigate = useNavigate();
 
     if (!book) return null;
 
@@ -29,13 +30,14 @@ const BookDetails: FC<Props> = ({ book }) => {
 
     const handleCartUpdate = () => {
         updateCart({ product: book, quantity: 1 });
-        toast.success("Sign up/in to purchase");
+        toast.success("Cart updated! Sign up/in to purchase");
     };
 
     const handleInstantCheckout = async () => {
         if (!profile) {
             toast.error("Sign up/in to purchase");
-            return <Navigate to={'/sign-up'} />
+            navigate('/sign-up');
+            return
         }
         try {
             setPending(true);
