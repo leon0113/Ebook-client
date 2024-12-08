@@ -195,8 +195,8 @@ const EpubReader: FC<Props> = ({ url, title, highlights, onHighlight, onHighligh
         if (!rendition) return;
         const newHighlight = { fill: color, selection: selectedCfi };
         applyHighlights(rendition, [newHighlight]);
-        setShowHighlightOptions(false);
         onHighlight(newHighlight);
+        setShowHighlightOptions(false);
     };
 
     const handleHighlightClear = () => {
