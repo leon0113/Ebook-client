@@ -95,7 +95,7 @@ const BookDetails: FC<Props> = ({ book }) => {
                 </div>
 
                 {/* File info  */}
-                <div className="flex items-center justify-center sm:justify-normal flex-wrap space-x-6 space-y-2 mt-6 h-10">
+                <div className="flex items-center justify-center sm:justify-normal flex-wrap space-x-6 space-y-2 mt-6 h-10 mb-5">
                     <div className="flex flex-col items-center justify-center space-y-1">
                         <FaEarthAfrica className="sm:text-2xl text-xl " />
                         <span className="sm:text-xs text-sm truncate">{language}</span>
@@ -136,7 +136,7 @@ const BookDetails: FC<Props> = ({ book }) => {
                             <>
                                 <Button
                                     startContent={<TbShoppingCartPlus />}
-                                    variant="light"
+                                    variant="bordered"
                                     onClick={handleCartUpdate}
                                     isLoading={loading}
                                 >
