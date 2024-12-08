@@ -362,8 +362,8 @@ const BookForm: FC<Props> = ({ title, submitBtnTitle, onSubmit, initialState }) 
 
 
             await onSubmit(formData, file);
-            window.location.reload();
             navigate('/');
+            window.location.reload();
         } catch (error) {
             parseError(error);
         } finally {
