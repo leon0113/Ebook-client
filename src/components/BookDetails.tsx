@@ -11,6 +11,7 @@ import { GoFileDirectoryFill } from "react-icons/go";
 import useCart from "../hooks/useCart";
 import client from "../api/client";
 import useAuth from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 interface Props {
     book?: IBookDetails
@@ -27,11 +28,15 @@ const BookDetails: FC<Props> = ({ book }) => {
     const { cover, title, authorId, publicationName, price, rating, id, description, language, fileInfo, genre, publishedAt, slug } = book;
 
     const handleCartUpdate = () => {
-        updateCart({ product: book, quantity: 1 })
+        updateCart({ product: book, quantity: 1 });
+        toast.success("Sign up/in to purchase");
     };
 
     const handleInstantCheckout = async () => {
-        if (!profile) return <Navigate to={'/sign-up'} />
+        if (!profile) {
+            toast.error("Sign up/in to purchase");
+            return <Navigate to={'/sign-up'} />
+        }
         try {
             setPending(true);
             const { data } = await client.post("/checkout/instant", { productId: id })
